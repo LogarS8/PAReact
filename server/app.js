@@ -17,7 +17,7 @@ import usersRoutes from "./routes/users.routes.js";
 
 //dirname
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const __public = join(__dirname, "../client/dist/");
+const __public = join(__dirname, "../client/dist");
 
 //session store
 const sessionStore = new MySQLStore({}, pool);
