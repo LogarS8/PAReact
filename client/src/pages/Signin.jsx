@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Footer, Header } from "../components/IndexModules";
-import { userAPI } from "../../API/userAPI";
+import { userAPI } from "../API/userAPI";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 

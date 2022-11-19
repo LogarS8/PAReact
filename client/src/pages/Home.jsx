@@ -35,7 +35,7 @@ const Home = () => {
                     </Link>
                     <Link
                       className="btn btn-light btn-lg"
-                      role="button"
+                      
                       to="/login"
                       style={{cursor: "pointer"}}
                     >
