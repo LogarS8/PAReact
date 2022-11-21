@@ -1,13 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Footer, Header } from "../components/IndexModules";
 import { userAPI as api } from "../API/userAPI";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import AuthContext from "../context/auth/AuthProvider";
 
 const MySwal = withReactContent(Swal);
 
 const Login = () => {
+
+  const {state} = useLocation();
+
+  const nav = useNavigate();
+
+  const { user: userC, setUser: setUserC, token, setToken } = useContext(AuthContext);
+
+  useEffect(()=>{
+    if(userC){
+      nav('/app');
+    }
+  }, [userC, token])
+
+
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -39,7 +54,7 @@ const Login = () => {
               fontSize: 27,
             }}
           >
-            Iniciar Sesion
+            {state?.message ? state.message : "Iniciar sesion"}
           </h4>
         </div>
 
@@ -48,20 +63,20 @@ const Login = () => {
             e.preventDefault();
             if(validate(user)){
               const res = await api.login(user)
-              console.log(res);
-              if(res.status === 200){
+              if(res.data.status === 200){
                 MySwal.fire({
                   title: "Bienvenido",
-                  text: "Iniciaste sesion correctamente",
+                  text: res.data.message,
                   icon: "success",
                   confirmButtonText: "Ok",
                 }).then(() => {
-                  window.location.href = "/";
+                  setUserC(res.data.user);
+                  console.log(res.data.user);
                 });
               }else{
                 MySwal.fire({
                   title: "Error",
-                  text: res.message,
+                  text: res.data.message,
                   icon: "error",
                   confirmButtonText: "Ok",
                 });

@@ -1,17 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Footer, Header } from "../components/IndexModules";
 import { userAPI } from "../API/userAPI";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import AuthContext from "../context/auth/AuthProvider";
 
 const MySwal = withReactContent(Swal);
 
 const Signin = () => {
+
+  const {user: userC} = useContext(AuthContext);
+
   const nav = useNavigate();
 
   const [image, setImage] = useState(undefined);
   const [preview, setPreview] = useState(undefined);
+
+  useEffect(()=>{
+    if(userC){
+      nav('/app');
+    }
+  }, [userC])
 
   const [user, setUser] = useState({
     firstName: "",
@@ -81,10 +91,10 @@ const Signin = () => {
 
             if (validate(user)) {
               const res = await userAPI.register(user);
-              if (res?.status === 200) {
+              if (res.data.status === 200) {
                 MySwal.fire({
                   title: "Registro exitoso",
-                  text: res.message,
+                  text: res.data.message,
                   icon: "success",
                   confirmButtonText: "Ok",
                 }).then(() => {
@@ -93,7 +103,7 @@ const Signin = () => {
               } else {
                 MySwal.fire({
                   title: "Error :(",
-                  text: res.message,
+                  text: res.data.message,
                   icon: "error",
                   confirmButtonText: "Ok",
                 });

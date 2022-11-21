@@ -26,3 +26,11 @@ CREATE TABLE `actividades` (
   PRIMARY KEY (`idAct`),
   KEY `idUsu_idx` (`idUsu`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `codigos` (
+  `idCodi` int NOT NULL AUTO_INCREMENT,
+  `codi` varchar(10) NOT NULL,
+  `idUsu` int NOT NULL,
+  PRIMARY KEY (`idCodi`),
+  KEY `idUsu_idx` (`idUsu`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

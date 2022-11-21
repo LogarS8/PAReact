@@ -8,12 +8,14 @@ import MySQLStore from "express-mysql-session";
 import cookieParser from "cookie-parser";
 
 //custom import
-import { PORT, SECRET_KEY } from "./config.js";
+import { NODE_ENV, PORT, SECRET_KEY } from "./config.js";
 import { pool } from "./DB/pool.js";
 
 //import routes
 import indexRoutes from "./routes/index.routes.js";
 import usersRoutes from "./routes/users.routes.js";
+import docenteRoutes from "./routes/docente.routes.js";
+import { authUserLogin, userCanAccess } from "./middleware/auth.mid.js";
 
 //dirname
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -25,15 +27,16 @@ const sessionStore = new MySQLStore({}, pool);
 const app = express();
 
 //middlewares
-app.use(cors({credentials:true}));
+app.use(cors({ credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(__public));
+
+//session and cookies
 app.use(cookieParser());
 app.use(
   session({
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 30,
     },
     key: "session_cookie_PA",
     secret: SECRET_KEY,
@@ -42,17 +45,29 @@ app.use(
     store: sessionStore,
   })
 );
+//static files
+app.use(express.static(__public)); //esta es la linea que te digo
+
+app.use("/", (req, res, next) => {
+  const { originalUrl: url } = req;
+  if (url.startsWith("/api/v1")) {
+    next();
+  } else {
+    res.sendFile(join(__public, "index.html"));
+  }
+});
 
 //routes
-app.use("/api/v1/",indexRoutes);
+app.use("/api/v1/p", indexRoutes);
 
 //api routes
-app.use("/api/v1/users", usersRoutes);
+app.use("/api/v1/users", authUserLogin, usersRoutes);
+app.use("/api/v1/utils/docente",  docenteRoutes);
+
 
 //server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}
-    dirname: ${__dirname}
-    public: ${__public}
+    http://localhost:${PORT}
   `);
 });
