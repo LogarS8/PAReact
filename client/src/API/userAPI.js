@@ -1,6 +1,6 @@
 import axios from "axios";
 export const apiEndPoint = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://breakandlearn.up.railway.app/api/v1",
 });
 
 export const userAPI = {
@@ -52,6 +52,6 @@ export const userAPI = {
     const res = await apiEndPoint.delete(`lecciones/deleteLeccionWriting/${id}`);
     return res;
   },
-  
+
 
 };
