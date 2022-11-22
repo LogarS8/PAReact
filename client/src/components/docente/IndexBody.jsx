@@ -7,15 +7,76 @@ import { useEffect } from "react";
 
 const MySwal = withReactContent(Swal);
 
+const AlumnoSection = ({ data, setAlumnos }) => {
+  return (
+    <tr key={data.idUsu}>
+      <td>{data.nombreUsu}</td>
+      <td>Alumno</td>
+      <td>CECyT 9</td>
+      <td
+        className="text-center align-middle"
+        style={{ maxHeight: 60, height: 60 }}
+      >
+        <a
+          className="btn btnMaterial btn-flat accent btnNoBorders checkboxHover"
+          role="button"
+          data-bss-tooltip=""
+          style={{ marginLeft: 5 }}
+          onClick={() => {
+            MySwal.fire({
+              title: "¿Estas seguro?",
+              text: "No podras revertir esta accion",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: "Si, eliminar",
+              cancelButtonText: "No, cancelar",
+              reverseButtons: true,
+            }).then(async (result) => {
+              if (result.isConfirmed) {
+                const res = await api.deleteStudent(data.idUsu);
+                console.log(res);
+                if (res.data.status === 200) {
+                  MySwal.fire("Eliminado", res.data.message, "success");
+                  setAlumnos((prev) => {
+                    return prev.filter((item) => item.idUsu !== data.idUsu);
+                  });
+                } else {
+                  MySwal.fire("Error", res.data.message, "error");
+                }
+              }
+            });
+          }}
+          title="Eliminar"
+        >
+          <i
+            className="fas fa-trash btnNoBorders"
+            style={{ color: "#DC3545" }}
+          ></i>
+        </a>
+      </td>
+    </tr>
+  );
+};
+
 const IndexBody = () => {
   const { user } = useContext(AuthContext);
 
   const [code, setCode] = useState("");
+  const [alumnos, setAlumnos] = useState([]);
+  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     async function fetchCode() {
-      const data = await api.getCode();
-      setCode(data.data.code);
+      const code = await api.getCode();
+      setCode(code.data.code);
+
+      const students = await api.getStudentsByCode(code.data.code);
+      console.log(students.data?.data);
+      if (students.data?.data) {
+        setAlumnos(students.data.data);
+      } else {
+        setMsg(students.data.message);
+      }
     }
     fetchCode();
   }, []);
@@ -52,9 +113,21 @@ const IndexBody = () => {
                           title: "Codigo generado",
                           text: `Tu nuevo codigo es: ${code}`,
                           icon: "success",
-                          confirmButtonText: "Ok",
+                          showCancelButton: true,
+                          confirmButtonText: "Copiar",
+                          cancelButtonText: "Cerrar",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            navigator.clipboard.writeText(code);
+                            MySwal.fire({
+                              title: "Codigo copiado",
+                              icon: "success",
+                              timer: 1500,
+                              showConfirmButton: false,
+                            });
+                          }
+                          setCode(code);
                         });
-                        setCode(code);
                       } else {
                         MySwal.fire({
                           title: "Error",
@@ -95,190 +168,38 @@ const IndexBody = () => {
                 style={{ margin: 0, padding: [5, 15] }}
               >
                 <p className="text-primary m-0 fw-bold">
-                  Alumnos inscritos en tu grupo
+                  {alumnos.length !== 0 ? "Alumnos inscritos en tu grupo" : msg}
                 </p>
               </div>
             </div>
           </div>
+
           <div className="row">
             <div className="col-12">
-              <div className="table-responsive">
-                <table
-                  className="table table-striped table tablesorter"
-                  id="ipi-table"
-                >
-                  <thead className="thead-dark">
-                    <tr>
-                      <th className="text-center">Nombre</th>
-                      <th className="text-center">Estado</th>
-                      <th className="text-center">TIPO</th>
-                      <th className="text-center">Escuela</th>
-                      <th className="text-center filter-false sorter-false">
-                        Acciones
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-center">
-                    <tr>
-                      <td>Rodrigo</td>
-                      <td>
-                        <p
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          title="Inscrito"
-                        >
-                          <i className="fas fa-check text-info"></i>
-                        </p>
-                        <p
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          title="No ha sido atendido"
-                        ></p>
-                        <p
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          title="Requiere validación"
-                        ></p>
-                      </td>
-                      <td>Alumno</td>
-                      <td>CECyT 9</td>
-                      <td
-                        className="text-center align-middle"
-                        style={{ maxHeight: 60, height: 60 }}
-                      >
-                        <a
-                          className="btn btnMaterial btn-flat primary semicircle"
-                          role="button"
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          href="show.html"
-                          title="Ver detalles"
-                        >
-                          <i className="far fa-eye"></i>
-                        </a>
-                        <a
-                          className="btn btnMaterial btn-flat success semicircle"
-                          role="button"
-                          href="send-document.html"
-                        >
-                          <i
-                            className="fas fa-arrows-alt"
-                            data-bs-toggle="tooltip"
-                            data-bss-tooltip=""
-                            title="Mover"
-                          ></i>
-                        </a>
-                        <a
-                          className="btn btnMaterial btn-flat success semicircle"
-                          role="button"
-                          href="create-document.html"
-                        >
-                          <i
-                            className="fas fa-pen"
-                            data-bs-toggle="tooltip"
-                            data-bss-tooltip=""
-                            title="Editar"
-                          ></i>
-                        </a>
-                        <a
-                          className="btn btnMaterial btn-flat accent btnNoBorders checkboxHover"
-                          role="button"
-                          data-bs-toggle="modal"
-                          data-bss-tooltip=""
-                          style={{ marginLeft: 5 }}
-                          data-bs-target="#delete-modal"
-                          href="#"
-                          title="Eliminar"
-                        >
-                          <i
-                            className="fas fa-trash btnNoBorders"
-                            style={{ color: "#DC3545" }}
-                          ></i>
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        Joshua
-                        <br />
-                      </td>
-                      <td>
-                        <p
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          title="Inscrito"
-                        >
-                          <i className="fas fa-check text-info"></i>
-                        </p>
-                        <p
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          title="No ha sido atendido"
-                        ></p>
-                        <p
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          title="Requiere validación"
-                        ></p>
-                      </td>
-                      <td>Alumno</td>
-                      <td>CECyT 9</td>
-                      <td
-                        className="text-center align-middle"
-                        style={{ maxHeight: 60, height: 60 }}
-                      >
-                        <a
-                          className="btn btnMaterial btn-flat primary semicircle"
-                          role="button"
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          href="show.html"
-                          title="Ver detalles"
-                        >
-                          <i className="far fa-eye"></i>
-                        </a>
-                        <a
-                          className="btn btnMaterial btn-flat success semicircle"
-                          role="button"
-                          href="send-document.html"
-                          title="Turnar"
-                        >
-                          <i
-                            className="fas fa-arrows-alt"
-                            data-bs-toggle="tooltip"
-                            data-bss-tooltip=""
-                            title="Mover"
-                          ></i>
-                        </a>
-                        <a
-                          className="btn btnMaterial btn-flat success semicircle"
-                          role="button"
-                          href="create-document.html"
-                        >
-                          <i
-                            className="fas fa-pen"
-                            data-bs-toggle="tooltip"
-                            data-bss-tooltip=""
-                            title="Editar"
-                          ></i>
-                        </a>
-                        <a
-                          className="btn btnMaterial btn-flat success semicircle"
-                          role="button"
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          title="Eliminar"
-                        >
-                          <i
-                            className="fas fa-trash btnNoBorders"
-                            style={{ color: "#DC3545" }}
-                          ></i>
-                        </a>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              {alumnos.length !== 0 ? (
+                <div className="table-responsive">
+                  <table
+                    className="table table-striped table tablesorter"
+                    id="ipi-table"
+                  >
+                    <thead className="thead-dark">
+                      <tr>
+                        <th className="text-center">Nombre</th>
+                        <th className="text-center">Tipo</th>
+                        <th className="text-center">Escuela</th>
+                        <th className="text-center filter-false sorter-false">
+                          Acciones
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-center">
+                      {alumnos?.map((alumno) => (
+                        <AlumnoSection data={alumno} setAlumnos={setAlumnos} />
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

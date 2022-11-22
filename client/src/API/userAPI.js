@@ -27,6 +27,31 @@ export const userAPI = {
   checkSession: async () => {
     const res = await apiEndPoint.get(`users/checkSession`);
     return res;
-  }
+  }, 
+  getStudentsByCode: async (code) => {
+    const res = await apiEndPoint.post(`utils/alumno/getStudentsByCode`, {code});
+    return res;
+  },
+  deleteStudent: async (id) => {
+    const res = await apiEndPoint.delete(`utils/docente/deleteStudent/${id}`);
+    return res;
+  },
+  getLeccionesVocabulary: async ()=>{
+    const res = await apiEndPoint.get(`lecciones/getLeccionesVocabulary`);
+    return res;
+  },
+  deleteLeccionVocabulary: async (id)=>{
+    const res = await apiEndPoint.delete(`lecciones/deleteLeccionVocabulary/${id}`);
+    return res;
+  },
+  getLeccionesWriting: async ()=>{
+    const res = await apiEndPoint.get(`lecciones/getLeccionesWriting`);
+    return res;
+  },
+  deleteLeccionWriting: async (id)=>{
+    const res = await apiEndPoint.delete(`lecciones/deleteLeccionWriting/${id}`);
+    return res;
+  },
+  
 
 };

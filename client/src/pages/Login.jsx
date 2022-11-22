@@ -150,9 +150,6 @@ const Login = () => {
                   <span className="label-text">Recuerdame</span>
                 </label>
               </div>
-              <a id="forgot-password-link" href="#">
-                Olvidaste tu contraseña?
-              </a>
             </div>
           </div>
         </form>

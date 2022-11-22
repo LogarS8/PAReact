@@ -18,4 +18,4 @@ const storage = multer.diskStorage({
 export default multer({
   dest: join(__public, "uploads"),
   storage,
-}).single("avatarFile");
+}).single("fileImg");

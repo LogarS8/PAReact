@@ -17,6 +17,29 @@ export const genCode = async (req, res) => {
 
   if (token) {
     const { id } = jwt.verify(token, SECRET_KEY);
+
+    const rows2 = await pool.query("SELECT * FROM codigos WHERE idUsu = ?;", [
+      id,
+    ]);
+
+    if (rows2.length > 0) {
+      return res.json({
+        message: "Ya tienes un código",
+        status: 400,
+      });
+    }
+
+    const rows1 = await pool.query("SELECT * FROM codigos WHERE codi = ?;", [
+      code.join(""),
+    ]);
+
+    if (rows1.length > 0) {
+      return res.json({
+        message: "El código ya existe, intente nuevamente",
+        status: 400,
+      });
+    }
+
     const [rows] = await pool.query(
       "insert into codigos(codi, idUsu) values (?, ?);",
       [code.join(""), id]
@@ -39,7 +62,6 @@ export const genCode = async (req, res) => {
       status: 400,
     });
   }
-
 };
 
 export const getCode = async (req, res) => {
@@ -69,4 +91,32 @@ export const getCode = async (req, res) => {
       status: 400,
     });
   }
-}
+};
+export const deleteStudent = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [rows] = await pool.query(
+      "update usuarios set codiAluUsu = null where idUsu = ?;",
+      [id]
+    );
+    if (rows.affectedRows > 0) {
+      res.json({
+        message: "Alumno eliminado",
+        status: 200,
+      });
+    }else{
+      res.json({
+        message: "Error al eliminar el alumno",
+        status: 400,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({
+      message: "Error al eliminar el alumno",
+      status: 400,
+    });
+    
+  }
+    
+};

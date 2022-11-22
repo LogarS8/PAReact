@@ -5,6 +5,7 @@ import AuthContext from "../context/auth/AuthProvider";
 
 import IndexBodyDoc from "../components/docente/IndexBody";
 import { userAPI as api } from "../API/userAPI";
+import Ejercicios from "../components/Ejercicios";
 
 const App = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -54,10 +55,7 @@ const App = () => {
           }
         />
         <Route path="/material" element={<h1>BBBBBBBBBBBBBBBBBBBBBBBBBB</h1>} />
-        <Route
-          path="/ejercicios"
-          element={<h1>CCCCCCCCCCCCCCCCCCCCCCCCCCCC</h1>}
-        />
+        <Route path="/ejercicios/*" element={<Ejercicios />}></Route>
         <Route path="/editar" element={<h2>DDDDDDDDDDDDDD</h2>} />
         {rol === "docente" ? (
           <Route

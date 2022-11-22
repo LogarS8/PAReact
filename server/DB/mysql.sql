@@ -34,3 +34,14 @@ CREATE TABLE `codigos` (
   PRIMARY KEY (`idCodi`),
   KEY `idUsu_idx` (`idUsu`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `lecciones` (
+  `idLec` int NOT NULL AUTO_INCREMENT,
+  `urlLec` varchar(100) NOT NULL,
+  `tipoLec` varchar(45) NOT NULL,
+  `respuestaLec` varchar(300) NOT NULL,
+  `numeroLec` int NOT NULL,
+  `idUsu` int NOT NULL,
+  PRIMARY KEY (`idLec`),
+  KEY `idUsu_idx` (`idUsu`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -15,11 +15,13 @@ import { pool } from "./DB/pool.js";
 import indexRoutes from "./routes/index.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import docenteRoutes from "./routes/docente.routes.js";
+import alumnoRoutes from "./routes/alumno.routes.js";
+import leccionesRoutes from "./routes/lecciones.routes.js";
 import { authUserLogin, userCanAccess } from "./middleware/auth.mid.js";
 
 //dirname
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const __public = join(__dirname, "../client/dist");
+export const __public = join(__dirname, "../client/dist");
 
 //session store
 const sessionStore = new MySQLStore({}, pool);
@@ -63,6 +65,8 @@ app.use("/api/v1/p", indexRoutes);
 //api routes
 app.use("/api/v1/users", authUserLogin, usersRoutes);
 app.use("/api/v1/utils/docente",  docenteRoutes);
+app.use("/api/v1/utils/alumno",  alumnoRoutes);
+app.use("/api/v1/lecciones", leccionesRoutes)
 
 
 //server
