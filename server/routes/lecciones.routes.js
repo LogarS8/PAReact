@@ -9,6 +9,8 @@ import {
   getLeccionesWriting,
   deleteLeccionWriting,
   crearLeccionReading,
+  getLeccionesReading,
+  deleteLeccionReading,
 } from "../controllers/lecciones.controller.js";
 
 const router = Router();
@@ -22,5 +24,7 @@ router.get("/getLeccionesWriting", getLeccionesWriting);
 router.delete("/deleteLeccionWriting/:id", deleteLeccionWriting);
 
 router.post("/crearLeccionReading", multer, crearLeccionReading);
+router.get("/getLeccionesReading", getLeccionesReading);
+router.delete("/deleteLeccionReading/:id", deleteLeccionReading);
 
 export default router;

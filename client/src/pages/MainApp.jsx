@@ -4,8 +4,11 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import AuthContext from "../context/auth/AuthProvider";
 
 import IndexBodyDoc from "../components/docente/IndexBody";
+import IndexBodyAlu from "../components/alumno/IndexBody";
 import { userAPI as api } from "../API/userAPI";
 import Ejercicios from "../components/Ejercicios";
+import ActividadesDoc from "../components/docente/ActividadesDoc";
+import MaterialDoc from "../components/docente/MaterialDoc";
 
 const App = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -50,17 +53,17 @@ const App = () => {
             rol === "docente" ? (
               <IndexBodyDoc />
             ) : (
-              <h1>AAAAAAAAAAAAAAAAAAAAAAAAAA</h1>
+              <IndexBodyAlu />
             )
           }
         />
-        <Route path="/material" element={<h1>BBBBBBBBBBBBBBBBBBBBBBBBBB</h1>} />
+        <Route path="/material" element={rol==="docente"?(<MaterialDoc/>):<h1>material alu </h1>} />
         <Route path="/ejercicios/*" element={<Ejercicios />}></Route>
         <Route path="/editar" element={<h2>DDDDDDDDDDDDDD</h2>} />
         {rol === "docente" ? (
           <Route
             path="/actividades"
-            element={<h2>EEEEEEEEEEEEEEEEEEEEEEEEEEEE</h2>}
+            element={<ActividadesDoc/>}
           />
         ) : null}
         <Route path="*" element={<h1>404</h1>} />

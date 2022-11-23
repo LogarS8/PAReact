@@ -47,12 +47,12 @@ export const NavLeft = () => {
                       >
                         Reading
                       </Link>
-                      <Link
+                      {/* <Link
                         className="dropdown-item"
                         to={`/app/ejercicios/listening`}
                       >
                         Listening
-                      </Link>
+                      </Link> */}
                       <Link
                         className="dropdown-item"
                         to={`/app/ejercicios/writing`}
@@ -326,12 +326,12 @@ const Ejercicios = () => {
           path="/reading"
           element={rol === "docente" ? <ReadingDoc /> : <h1>reading alu</h1>}
         />
-        <Route
+        {/* <Route
           path="/listening"
           element={
             rol === "docente" ? <ListeningDoc/> : <h1>listening alu</h1>
           }
-        />
+        /> */}
         <Route
           path="/writing"
           element={

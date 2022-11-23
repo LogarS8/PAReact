@@ -1,11 +1,20 @@
 drop database if exists `parodri`;
 
-CREATE DATABASE  IF NOT EXISTS `parodri` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `parodri`
+/*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */
+/*!80016 DEFAULT ENCRYPTION='N' */
+;
+
 USE `parodri`;
 
 DROP TABLE IF EXISTS `usuarios`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+
+/*!50503 SET character_set_client = utf8mb4 */
+;
+
 CREATE TABLE `usuarios` (
   `idUsu` int NOT NULL AUTO_INCREMENT,
   `nombreUsu` varchar(45) NOT NULL,
@@ -15,7 +24,7 @@ CREATE TABLE `usuarios` (
   `imgurlUsu` longtext NOT NULL,
   `rolUsu` varchar(45) NOT NULL,
   PRIMARY KEY (`idUsu`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 CREATE TABLE `actividades` (
   `idAct` int NOT NULL AUTO_INCREMENT,
@@ -25,7 +34,7 @@ CREATE TABLE `actividades` (
   `idUsu` int NOT NULL,
   PRIMARY KEY (`idAct`),
   KEY `idUsu_idx` (`idUsu`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 CREATE TABLE `codigos` (
   `idCodi` int NOT NULL AUTO_INCREMENT,
@@ -33,7 +42,7 @@ CREATE TABLE `codigos` (
   `idUsu` int NOT NULL,
   PRIMARY KEY (`idCodi`),
   KEY `idUsu_idx` (`idUsu`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 CREATE TABLE `lecciones` (
   `idLec` int NOT NULL AUTO_INCREMENT,
@@ -44,4 +53,15 @@ CREATE TABLE `lecciones` (
   `idUsu` int NOT NULL,
   PRIMARY KEY (`idLec`),
   KEY `idUsu_idx` (`idUsu`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+create table `test`(
+  `idTes` int not null AUTO_INCREMENT,
+  `nombreTes` varchar(45) not null,
+  `numeroTes` int not null,
+  `preguntaTes` varchar(300) not null,
+  `respuestaTes` varchar(300) null default null,
+  `idUsu` int not null,
+  primary key (`idTes`),
+  key `idUsu_idx` (`idUsu`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;

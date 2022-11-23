@@ -8,14 +8,26 @@ export const getUsers = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-  const { firstName, lastName, email, password, confirmPassword, image } =
-    req.body;
+  const { firstname, lastname, email, password, confirmpass } = req.body;
 
-  if (!firstName || !lastName || !email || !password || !confirmPassword) {
-    res.json({ message: "Todos los campos son obligatorios", status: 400 });
+  const image = req.file?.filename;
+
+  if (
+    !firstname ||
+    !lastname ||
+    !email ||
+    !password ||
+    !confirmpass ||
+    !image
+  ) {
+    console.log(req.body);
+    return res.json({
+      message: "Todos los campos son obligatorios",
+      status: 400,
+    });
   }
-  if (password !== confirmPassword) {
-    res.json({ message: "Las contraseñas no coinciden", status: 400 });
+  if (password !== confirmpass) {
+    return res.json({ message: "Las contraseñas no coinciden", status: 400 });
   }
 
   const [rows] = await pool.query(
@@ -30,7 +42,7 @@ export const createUser = async (req, res) => {
   const [result] = await pool
     .query(
       "INSERT INTO usuarios(nombreUsu, apellidosUsu, correoUsu, contraseñaUsu, imgurlUsu, rolUsu) values (?, ?, ?, ?, ?, ?)",
-      [firstName, lastName, email, encryptedPassword, image, "docente"]
+      [firstname, lastname, email, encryptedPassword, image, "alumno"]
     )
     .catch((err) => {
       console.log(err);
@@ -83,9 +95,9 @@ export const loginUser = async (req, res) => {
       const d = res.cookie("cookie_token", cookie_token, {
         httpOnly: NODE_ENV === "production",
         maxAge: REMEMBER_TIME,
-      })
+      });
 
-      console.log({cookie_token, session_token});
+      console.log({ cookie_token, session_token });
 
       req.session.token = session_token;
 
@@ -126,13 +138,9 @@ export const updateUser = async (req, res) => {};
 
 export const deleteUser = async (req, res) => {};
 
-
 export const checkSession = async (req, res) => {
   if (req.session.token) {
-    const { id, password, rol } = jwt.verify(
-      req.session.token,
-      SECRET_KEY
-    );
+    const { id, password, rol } = jwt.verify(req.session.token, SECRET_KEY);
     const [rows] = await pool.query(
       "SELECT * FROM usuarios WHERE idUsu = ? AND contraseñaUsu = ?;",
       [id, password]
@@ -146,7 +154,7 @@ export const checkSession = async (req, res) => {
           lastName: rows[0].apellidosUsu,
           email: rows[0].correoUsu,
           image: rows[0].imgurlUsu,
-          rol:rows[0].rolUsu,
+          rol: rows[0].rolUsu,
         },
       });
     } else {
@@ -158,7 +166,7 @@ export const checkSession = async (req, res) => {
   } else {
     return res.json({ message: "No hay sesión iniciada", status: 400 });
   }
-}
+};
 
 export const logoutUser = async (req, res) => {
   const { cookie_token } = req.cookies;

@@ -11,9 +11,4 @@ router.post("/createUser", multer, createUser);
 router.get("/checkSession", checkSession);
 router.post("/", loginUser);
 
-router.route("/:id")
-  .get(getUser)
-  .put(updateUser)
-  .delete(deleteUser);
-
 export default router;

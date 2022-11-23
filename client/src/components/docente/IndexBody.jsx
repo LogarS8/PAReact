@@ -86,6 +86,7 @@ const IndexBody = () => {
       <div className="container-fluid">
         <div className="row pt-5">
           <div className="col-4 ">
+            <img src={`/public/uploads/${user.imgurlUsu}`} class="img-fluid rounded" alt="" height={30} width={30} />
             <h3 className="text-dark mb-4">Bienvenido, {user?.lastName}</h3>
           </div>
           <div className="col-2 text-end" style={{ marginBottom: 30 }}>

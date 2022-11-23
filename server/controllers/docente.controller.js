@@ -18,7 +18,7 @@ export const genCode = async (req, res) => {
   if (token) {
     const { id } = jwt.verify(token, SECRET_KEY);
 
-    const rows2 = await pool.query("SELECT * FROM codigos WHERE idUsu = ?;", [
+    const [rows2] = await pool.query("SELECT * FROM codigos WHERE idUsu = ?;", [
       id,
     ]);
 
@@ -29,7 +29,7 @@ export const genCode = async (req, res) => {
       });
     }
 
-    const rows1 = await pool.query("SELECT * FROM codigos WHERE codi = ?;", [
+    const [rows1] = await pool.query("SELECT * FROM codigos WHERE codi = ?;", [
       code.join(""),
     ]);
 

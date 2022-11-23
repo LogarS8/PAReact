@@ -86,11 +86,22 @@ const Signin = () => {
         style={{ paddingTop: 0, marginTop: 48 }}
       >
         <form
+          encType="multipart/form-data"
           onSubmit={async (e) => {
             e.preventDefault();
 
             if (validate(user)) {
-              const res = await userAPI.register(user);
+
+              const formData = new FormData(e.target);
+              // formData.append("firstName", user.firstName);
+              // formData.append("lastName", user.lastName);
+              // formData.append("email", user.email);
+              // formData.append("password", user.password);
+              // formData.append("fileImg", image, image.name);
+              // formData.append("confirmPassword", user.confirmPassword);
+              // formData.append("image", user.image);
+
+              const res = await userAPI.register(formData);
               if (res.data.status === 200) {
                 MySwal.fire({
                   title: "Registro exitoso",
@@ -131,7 +142,7 @@ const Signin = () => {
               <input
                 className="form-control form-control"
                 type="file"
-                name="avatarFile"
+                name="fileImg"
                 accept="image/jpeg, image/png"
                 required
                 onChange={(e) => {

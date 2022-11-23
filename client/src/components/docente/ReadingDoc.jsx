@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { NavLeft } from "../Ejercicios";
+import { userAPI as api } from "../../API/userAPI";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const ReadingDoc = () => {
   const [ejercicios, setEjercicios] = useState([
@@ -14,6 +19,27 @@ const ReadingDoc = () => {
     [9, {}],
     [10, {}],
   ]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await api.getLeccionesReading();
+        if (res.data.status === 200) {
+          res.data.data.forEach((item) => {
+            setEjercicios((prev) => {
+              const newEjercicios = [...prev];
+              newEjercicios[item.numeroLec - 1][1] = item;
+              return newEjercicios;
+            });
+          });
+        }
+        console.log(res.data?.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchData();
+  }, []);
 
   const numbers = [1, 2, 3, 4];
 
@@ -62,72 +88,68 @@ const ReadingDoc = () => {
                       <>
                         <div className="card mb-3">
                           <img
-                            src="assets/img/ejemplo.png"
+                            src={`../../public/uploads/${ejercicio[1].urlLec}`}
                             className="card-img-top"
                             alt="..."
                           />
                           <div className="card-body">
-                            <div className="form-check">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="flexCheckDefault"
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="flexCheckDefault"
-                              >
-                                Respuesta 1
-                              </label>
-                            </div>
-                            <div className="form-check">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="flexCheckChecked"
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="flexCheckChecked"
-                              >
-                                Respuesta 2
-                              </label>
-                            </div>
-                            <div className="form-check">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="flexCheckChecked2"
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="flexCheckChecked"
-                              >
-                                Respuesta 3
-                              </label>
-                            </div>
-                            <div className="form-check">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                value=""
-                                id="flexCheckChecked3"
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="flexCheckChecked"
-                              >
-                                Respuesta 4
-                              </label>
-                            </div>
+                            {numbers.map((number, index) => {
+                              const [respuesta, ...rest] =
+                                ejercicio[1]?.respuestaLec?.split(":::");
+                              const bool = (respuesta - 1) === index;
+                              if (rest[index]) {
+                                return (
+                                  <div className="form-check" key={index}>
+                                    <input
+                                      disabled
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      id="flexCheckDefault"
+                                      checked={bool}
+                                    />
+                                    <label
+                                      className="form-check-label"
+                                      htmlFor="flexCheckDefault"
+                                    >
+                                      {rest[index]}
+                                    </label>
+                                  </div>
+                                );
+                              }
+                            })}
                             <br />
                           </div>
                         </div>
                         <div className="d-grid gap-2">
-                          <button className="btn btn-danger" type="button">
+                          <button
+                            className="btn btn-danger"
+                            type="button"
+                            onClick={async () => {
+                              const res = await api.deleteLeccionReading(
+                                ejercicio[1].idLec
+                              );
+                              console.log(res);
+                              if (res.data.status) {
+                                MySwal.fire({
+                                  icon: "success",
+                                  title: "Lección eliminada",
+                                  text: res.data.message,
+                                  showConfirmButton: false,
+                                  timer: 1500,
+                                }).then(() => {
+                                  window.location.reload();
+                                });
+                              } else {
+                                MySwal.fire({
+                                  icon: "error",
+                                  title: "Error al eliminar",
+                                  text: res.data.message,
+                                  showConfirmButton: false,
+                                  timer: 1500,
+                                });
+                              }
+                            }}
+                          >
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borrar
                             lección&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           </button>
@@ -140,7 +162,7 @@ const ReadingDoc = () => {
                         <form
                           encType="multipart/form-data"
                           method="POST"
-                          action="/api/v1/lecciones/crearLeccionVocabulary"
+                          action="/api/v1/lecciones/crearLeccionReading"
                         >
                           <input
                             type="hidden"
