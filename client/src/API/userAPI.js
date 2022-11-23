@@ -1,11 +1,13 @@
 import axios from "axios";
 export const apiEndPoint = axios.create({
-  baseURL: "https://breakandlearn.up.railway.app/api/v1",
+  // https://breakandlearn.up.railway.app/
+  // http://localhost:3000/
+  baseURL: "http://localhost:3000/api/v1",
 });
 
 export const userAPI = {
   login: async (data) => {
-    const res = await apiEndPoint.post(`users/`, data);
+    const res = await apiEndPoint.post(`users`, data);
     return res;
   },
   register: async (data) => {

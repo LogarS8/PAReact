@@ -14,6 +14,11 @@ const ReadingDoc = () => {
     [9, {}],
     [10, {}],
   ]);
+
+  const numbers = [1, 2, 3, 4];
+
+  const [contadorPreguntas, setContadorPreguntas] = useState(2);
+
   return (
     <div>
       <div className="container">
@@ -62,7 +67,6 @@ const ReadingDoc = () => {
                             alt="..."
                           />
                           <div className="card-body">
-                            
                             <div className="form-check">
                               <input
                                 className="form-check-input"
@@ -124,7 +128,8 @@ const ReadingDoc = () => {
                         </div>
                         <div className="d-grid gap-2">
                           <button className="btn btn-danger" type="button">
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borrar lección&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borrar
+                            lección&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           </button>
                         </div>
                         <br />
@@ -132,7 +137,16 @@ const ReadingDoc = () => {
                     ) : (
                       <>
                         <h2>Leccion {ejercicio[0]}</h2>
-                        <form>
+                        <form
+                          action="/api/v1/lecciones/crearLeccionReading"
+                          method="POST"
+                          encType="multipart/form-data"
+                        >
+                          <input
+                            type="hidden"
+                            name="numero"
+                            value={ejercicio[0]}
+                          />
                           <div className="mb-3">
                             <label htmlFor="formFileSm" className="form-label">
                               Elige una imagen de lectura
@@ -147,37 +161,53 @@ const ReadingDoc = () => {
                           <select
                             className="form-select"
                             aria-label="Default select example"
-                            defaultValue={""}
+                            defaultValue={2}
+                            onChange={(e) => {
+                              console.log(e.target.value);
+                              setContadorPreguntas(e.target.value);
+                            }}
+                            placeholder="Selecciona el número de preguntas"
                           >
-                            <option defaultValue={""}>
-                              Elige de cuantas opciones es la pregunta
-                            </option>
-                            <option value="1">Una</option>
-                            <option value="2">Dos</option>
-                            <option value="3">Tres</option>
-                            <option value="4">Cuatro</option>
+                            <option value={2}>Dos</option>
+                            <option value={3}>Tres</option>
+                            <option value={4}>Cuatro</option>
                           </select>
                           <br />
-                          <div className="form-floating mb-3">
-                            <input
-                              type="email"
-                              className="form-control"
-                              id={`floatingInput-${ejercicio[0]}`}
-                              placeholder="Pregunta"
-                            />
-                            <label htmlFor={`floatingInput-${ejercicio[0]}`}>
-                              Ingresa la pregunta
-                            </label>
-                          </div>
+                          <hr />
+                          {numbers.map((number, index) => {
+                            if (contadorPreguntas >= number) {
+                              return (
+                                <div className="form-floating mb-3" key={index}>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id={`floatingInput-${ejercicio[0]}-${number}`}
+                                    placeholder="Pregunta"
+                                    name="opciones"
+                                  />
+                                  <label
+                                    htmlFor={`floatingInput-${ejercicio[0]}-${number}`}
+                                  >
+                                    Ingresa la opcion {number}
+                                  </label>
+                                </div>
+                              );
+                            } else {
+                              return null;
+                            }
+                          })}
                           <div className="form-floating">
                             <input
-                              type="password"
+                              type="number"
+                              min={1}
+                              max={contadorPreguntas}
                               className="form-control"
                               id={`floatingPassword-${ejercicio[0]}`}
                               placeholder="Opciones"
+                              name="respuesta"
                             />
                             <label htmlFor={`floatingPassword-${ejercicio[0]}`}>
-                              Ingresa las opciones
+                              Ingresa la opción correcta
                             </label>
                           </div>
                           <br />
