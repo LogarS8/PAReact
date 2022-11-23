@@ -80,10 +80,12 @@ export const loginUser = async (req, res) => {
         SECRET_KEY
       );
 
-      res.cookie("cookie_token", cookie_token, {
+      const d = res.cookie("cookie_token", cookie_token, {
         httpOnly: NODE_ENV === "production",
         maxAge: REMEMBER_TIME,
-      });
+      })
+
+      console.log({cookie_token, session_token});
 
       req.session.token = session_token;
 

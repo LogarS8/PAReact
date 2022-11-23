@@ -177,7 +177,6 @@ const IndexDoc = () => {
                           encType="multipart/form-data"
                           method="POST"
                           action="/api/v1/lecciones/crearLeccionVocabulary"
-                          onSubmit={(e) => {}}
                         >
                           <div className="mb-3">
                             <label htmlFor={`fileImg-${item[0]}`} className="form-label">

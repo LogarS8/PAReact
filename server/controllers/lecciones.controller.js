@@ -174,3 +174,43 @@ export const deleteLeccionWriting = async (req, res) => {
     res.json({ message: "No se ha iniciado sesión", status: 400 });
   }
 };
+export const crearLeccionReading = async (req, res) => {
+  console.log(typeof req.body.opciones === "string");
+  const { respuesta, numero, opciones } = req.body;
+  const { filename } = req.file;
+  const token = req.session?.token;
+  if (token) {
+    const { id } = jwt.verify(token, SECRET_KEY);
+    const data1 = [
+      filename,
+      "reading",
+      respuesta.toString(),
+      numero,
+      id,
+      opciones,
+    ];
+    console.log(data1)
+    // const [rows2] = await pool.query(
+    //   "SELECT * FROM lecciones WHERE numeroLec = ? and tipoLec = 'reading';",
+    //   [numero]
+    // );
+    // if (rows2.length > 0) {
+    //   console.log("Ya tienes una lección con ese número");
+    //   return res.json({
+    //     message: "Ya tienes una lección con estos datos",
+    //     status: 400,
+    //   });
+    // }
+    // const [rows] = await pool.query(
+    //   "insert into lecciones(urlLec, tipoLec, respuestaLec, numeroLec, idUsu, opcionesLec) values (?, ?, ?, ?, ?, ?);",
+    //   data1
+    // );
+    // if (rows.affectedRows > 0) {
+    //   res.redirect("/app/ejercicios/reading");
+    // } else {
+    //   res.json({ message: "Error al crear la lección", status: 400 });
+    // }
+  }else {
+    res.json({ message: "No se ha iniciado sesión", status: 400 });
+  }
+};

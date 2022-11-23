@@ -71,7 +71,5 @@ app.use("/api/v1/lecciones", leccionesRoutes)
 
 //server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}
-    http://localhost:${PORT}
-  `);
+  console.log(`http://localhost:${PORT}`);
 });

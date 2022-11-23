@@ -138,9 +138,9 @@ const ReadingDoc = () => {
                       <>
                         <h2>Leccion {ejercicio[0]}</h2>
                         <form
-                          action="/api/v1/lecciones/crearLeccionReading"
-                          method="POST"
                           encType="multipart/form-data"
+                          method="POST"
+                          action="/api/v1/lecciones/crearLeccionVocabulary"
                         >
                           <input
                             type="hidden"
