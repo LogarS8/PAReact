@@ -42,7 +42,7 @@ export const createUser = async (req, res) => {
   const [result] = await pool
     .query(
       "INSERT INTO usuarios(nombreUsu, apellidosUsu, correoUsu, contraseñaUsu, imgurlUsu, rolUsu) values (?, ?, ?, ?, ?, ?)",
-      [firstname, lastname, email, encryptedPassword, image, "alumno"]
+      [firstname, lastname, email, encryptedPassword, image, "docente"]
     )
     .catch((err) => {
       console.log(err);
