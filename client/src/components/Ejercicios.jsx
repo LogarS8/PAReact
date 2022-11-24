@@ -2,12 +2,14 @@ import React, { useContext, useState, useEffect } from "react";
 import { userAPI as api } from "../API/userAPI";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import AuthContext from "../context/auth/AuthProvider";
 import ReadingDoc from "./docente/ReadingDoc";
 import WritingDoc from "./docente/WritingDoc";
 import ListeningDoc from "./docente/ListeningDoc";
 import TestDoc from "./docente/TestDoc";
+import TestAlu from "./alumno/TestAlu";
+import ReadingAlu from "./alumno/ReadingAlu";
 
 const MySwal = withReactContent(Swal);
 
@@ -179,7 +181,10 @@ const IndexDoc = () => {
                           action="/api/v1/lecciones/crearLeccionVocabulary"
                         >
                           <div className="mb-3">
-                            <label htmlFor={`fileImg-${item[0]}`} className="form-label">
+                            <label
+                              htmlFor={`fileImg-${item[0]}`}
+                              className="form-label"
+                            >
                               Elige una imagen
                             </label>
                             <input
@@ -304,27 +309,164 @@ const IndexDoc = () => {
   );
 };
 
+const IndexAlu = () => {
+  const [ejercicios, setEjercicios] = useState([
+    [1, {}],
+    [2, {}],
+    [3, {}],
+    [4, {}],
+    [5, {}],
+    [6, {}],
+    [7, {}],
+    [8, {}],
+    [9, {}],
+    [10, {}],
+  ]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await api.getVocabularyAlu();
+        console.log(res);
+        if (res.data.status === 200) {
+          res.data.data.forEach((item) => {
+            setEjercicios((prev) => {
+              const newEjercicios = [...prev];
+              newEjercicios[item.numeroLec - 1][1] = item;
+              return newEjercicios;
+            });
+          });
+        }
+        const res2 = await api.getVocabularyActivity();
+        if (res2.data.status === 200) {
+          res2.data.data.forEach((item) => {
+            setEjercicios((prev) => {
+              const newEjercicios = [...prev];
+              newEjercicios[item.numeroAct - 1][1] = { state: "done" };
+              return newEjercicios;
+            });
+          });
+        }
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      <div className="container">
+        <div className="row">
+          <NavLeft></NavLeft>
+          <div
+            className="col-md-6 flex-fill"
+            style={{ marginTop: 83, paddingLeft: 52 }}
+          >
+            <div className="mx-5">
+              <ul
+                className="nav nav-tabs flex-column g-5"
+                role="tablist"
+                style={{ width: "20%", float: "left" }}
+              >
+                {ejercicios.map((item, index) => (
+                  <li key={index} className="nav-item" role="presentation">
+                    <a
+                      className={`nav-link fw-bolder link-secondary `}
+                      role="tab"
+                      data-bs-toggle="tab"
+                      href={`#tab-${item[0]}`}
+                    >
+                      Lección {item[0]}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div
+                className="tab-content pl-3"
+                style={{ width: "80%", float: "right" }}
+              >
+                {ejercicios.map((item, index) => (
+                  <div
+                    className="tab-pane"
+                    role="tabpanel"
+                    id={`tab-${item[0]}`}
+                    key={index}
+                  >
+                    {!item[1].respuestaLec && item[1]?.state !== "done" ? (
+                      <>
+                        <h2>Esperando que el profesor suba la leccion</h2>
+                        <hr />
+                      </>
+                    ) : null}
+                    {item[1].respuestaLec ? (
+                      <form
+                        action="/api/v1/actividades/createVocabularyActivity"
+                        method="POST"
+                      >
+                        <input type={"hidden"} value={item[0]} name="numero" />
+                        <div className="card" style={{ width: "18rem" }}>
+                          <img
+                            src={`../public/uploads/${item[1].urlLec}`}
+                            className="card-img-top"
+                            alt="..."
+                          />
+                          <div className="card-body">
+                            <h5 className="card-title">Respuesta correcta</h5>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id={`inputPassword3-${item[0]}`}
+                              name="respuesta"
+                            />
+                            <br />
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="d-grid gap-2">
+                          <button className="btn btn-primary" type="submit">
+                            Enviar respuesta
+                          </button>
+                        </div>
+                      </form>
+                    ) : null}
+                    {item[1]?.state === "done" ? (
+                      <h1>Ya has resuelto esta actividad :)</h1>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Ejercicios = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser, code } = useContext(AuthContext);
 
   const rol = user?.rol;
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (!code) {
+      nav("/app");
+    }
+  }, [code]);
 
   return (
     <>
       <Routes>
         <Route
           path="/"
-          element={
-            rol === "docente" ? (
-              <IndexDoc />
-            ) : (
-              <h1>CCCCCCCCCCCCCCCCCCCCCCCCC</h1>
-            )
-          }
+          element={rol === "docente" ? <IndexDoc /> : <IndexAlu />}
         />
         <Route
           path="/reading"
-          element={rol === "docente" ? <ReadingDoc /> : <h1>reading alu</h1>}
+          element={rol === "docente" ? <ReadingDoc /> : <ReadingAlu/>}
         />
         {/* <Route
           path="/listening"
@@ -334,13 +476,11 @@ const Ejercicios = () => {
         /> */}
         <Route
           path="/writing"
-          element={
-            rol === "docente" ? <WritingDoc/> : <h1>writing alu</h1>
-          }
+          element={rol === "docente" ? <WritingDoc /> : <h1>writing alu</h1>}
         />
         <Route
           path="/test"
-          element={rol === "docente" ? <TestDoc /> : <h1>test alu</h1>}
+          element={rol === "docente" ? <TestDoc /> : <TestAlu />}
         />
       </Routes>
     </>

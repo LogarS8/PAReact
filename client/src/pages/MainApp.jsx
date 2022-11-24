@@ -9,6 +9,7 @@ import { userAPI as api } from "../API/userAPI";
 import Ejercicios from "../components/Ejercicios";
 import ActividadesDoc from "../components/docente/ActividadesDoc";
 import MaterialDoc from "../components/docente/MaterialDoc";
+import MaterialAlu from "../components/alumno/MaterialAlu";
 
 const App = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -57,7 +58,7 @@ const App = () => {
             )
           }
         />
-        <Route path="/material" element={rol==="docente"?(<MaterialDoc/>):<h1>material alu </h1>} />
+        <Route path="/material/*" element={rol==="docente"?(<MaterialDoc/>):(<MaterialAlu/>)} />
         <Route path="/ejercicios/*" element={<Ejercicios />}></Route>
         <Route path="/editar" element={<h2>DDDDDDDDDDDDDD</h2>} />
         {rol === "docente" ? (

@@ -97,3 +97,101 @@ export const getCode = async (req, res) => {
     });
   }
 };
+export const getTests = async (req, res) => {
+  const token = req.session?.token;
+  if (token) {
+    const { id } = jwt.verify(token, SECRET_KEY);
+    const [rows] = await pool.query(
+      "select codiAluUsu from usuarios where idUsu = ?;",
+      [id]
+    );
+    if (rows.length > 0) {
+      const [rows2] = await pool.query(
+        "select idUsu from codigos where codi = ?;",
+        [rows[0].codiAluUsu]
+      );
+      if (rows2.length > 0) {
+        const [rows3] = await pool.query(
+          "select * from test where idUsu = ?;",
+          [rows2[0].idUsu]
+        );
+        if (rows3.length > 0) {
+          res.json({
+            message: "tests obtenidos",
+            status: 200,
+            data: rows3,
+          });
+        } else {
+          res.json({
+            message: "No se han encontrado pruebas",
+            status: 400,
+          });
+        }
+      } else {
+        res.json({
+          message: "No se han encontrado tests",
+          status: 400,
+        });
+      }
+    } else {
+      res.json({
+        message: "No tienes pruebas",
+        status: 400,
+      });
+    }
+  } else {
+    res.json({
+      message: "No se ha iniciado sesión",
+      status: 400,
+    });
+  }
+}
+export const getVocabularyAlu = async (req, res) => {
+  const token = req.session?.token;
+  if (token) {
+    const { id } = jwt.verify(token, SECRET_KEY);
+    const [rows] = await pool.query(
+      "select codiAluUsu from usuarios where idUsu = ?;",
+      [id]
+    );
+    if (rows.length > 0) {
+      const [rows2] = await pool.query(
+        "select idUsu from codigos where codi = ?;",
+        [rows[0].codiAluUsu]
+      );
+      if (rows2.length > 0) {
+        const [rows3] = await pool.query(
+          "select * from lecciones where idUsu = ? and tipoLec = 'vocabulary';",
+          [rows2[0].idUsu]
+        );
+        if (rows3.length > 0) {
+          res.json({
+            message: "vocabulario obtenido",
+            status: 200,
+            data: rows3,
+          });
+        } else {
+          res.json({
+            message: "No se han encontrado vocabulario",
+            status: 400,
+          });
+        }
+      } else {
+        res.json({
+          message: "No se han encontrado vocabulario",
+          status: 400,
+        });
+      }
+    } else {
+      res.json({
+        message: "No tienes vocabulario",
+        status: 400,
+      });
+    }
+  } else {
+    res.json({
+      message: "No se ha iniciado sesión",
+      status: 400,
+    });
+  }
+}

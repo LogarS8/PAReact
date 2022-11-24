@@ -18,6 +18,8 @@ import docenteRoutes from "./routes/docente.routes.js";
 import alumnoRoutes from "./routes/alumno.routes.js";
 import leccionesRoutes from "./routes/lecciones.routes.js";
 import testRoutes from "./routes/test.routes.js";
+import materialesRoutes from "./routes/materiales.routes.js";
+import actividadesRoutes from "./routes/actividades.routes.js";
 import { authUserLogin, userCanAccess } from "./middleware/auth.mid.js";
 
 //dirname
@@ -69,6 +71,8 @@ app.use("/api/v1/utils/docente",  docenteRoutes);
 app.use("/api/v1/utils/alumno",  alumnoRoutes);
 app.use("/api/v1/lecciones", leccionesRoutes)
 app.use("/api/v1/test", testRoutes)
+app.use("/api/v1/materiales", materialesRoutes)
+app.use("/api/v1/actividades", actividadesRoutes)
 
 
 //server

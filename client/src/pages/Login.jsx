@@ -9,19 +9,20 @@ import AuthContext from "../context/auth/AuthProvider";
 const MySwal = withReactContent(Swal);
 
 const Login = () => {
-
-  const {state} = useLocation();
+  const { state } = useLocation();
 
   const nav = useNavigate();
 
-  const { user: userC, setUser: setUserC, token, setToken } = useContext(AuthContext);
+  const {
+    user: userC,
+    setUser: setUserC,
+  } = useContext(AuthContext);
 
-  useEffect(()=>{
-    if(userC){
-      nav('/app');
+  useEffect(() => {
+    if (userC) {
+      nav("/app");
     }
-  }, [userC, token])
-
+  }, [userC]);
 
   const [user, setUser] = useState({
     email: "",
@@ -61,19 +62,11 @@ const Login = () => {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            if(validate(user)){
-              const res = await api.login(user)
-              if(res.data.status === 200){
-                MySwal.fire({
-                  title: "Bienvenido",
-                  text: res.data.message,
-                  icon: "success",
-                  confirmButtonText: "Ok",
-                }).then(() => {
-                  setUserC(res.data.user);
-                  console.log(res.data.user);
-                });
-              }else{
+            if (validate(user)) {
+              const res = await api.login(user);
+              if (res.data.status === 200) {
+                setUserC(res.data.user);
+              } else {
                 MySwal.fire({
                   title: "Error",
                   text: res.data.message,
@@ -140,11 +133,10 @@ const Login = () => {
                   name="check"
                   value={user.remember}
                   onChange={(e) => {
-                    setUser((prev)=>{
-                      return {...prev, remember: !prev.remember}
+                    setUser((prev) => {
+                      return { ...prev, remember: !prev.remember };
                     });
                   }}
-
                 />
                 <label className="form-check-label" htmlFor="formCheck-1">
                   <span className="label-text">Recuerdame</span>

@@ -23,7 +23,7 @@ export const Header = ({ rol }) => {
         style={{ paddingBottom: 7 }}
       >
         <div className="container">
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand" to="/app">
             Break&amp;Learn
           </Link>
           <button

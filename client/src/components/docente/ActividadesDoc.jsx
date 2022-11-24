@@ -1,6 +1,18 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../../context/auth/AuthProvider";
 
 const ActividadesDoc = () => {
+  const {code} = useContext(AuthContext)
+
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (!code) {
+      nav("/app");
+    }
+  }, [code]);
+
   return (
     <div>
       <div className="container-fluid" style={{ paddingTop: 26 }}>

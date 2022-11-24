@@ -2,7 +2,7 @@ import axios from "axios";
 export const apiEndPoint = axios.create({
   // https://breakandlearn.up.railway.app/
   // http://localhost:3000/
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://breakandlearn.up.railway.app/api/v1",
 });
 
 export const userAPI = {
@@ -87,12 +87,55 @@ export const userAPI = {
     return res;
   },
   setStudentCode: async (code) => {
-    const res = await apiEndPoint.post(`utils/alumno/setCode`, {code});
+    const res = await apiEndPoint.post(`utils/alumno/setCode`, { code });
     return res;
   },
   getStudentCode: async () => {
     const res = await apiEndPoint.get(`utils/alumno/getCode`);
     return res;
   },
-  
+  createMaterial: async (data) => {
+    const res = await apiEndPoint.post(`materiales/createMaterial`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res;
+  },
+  getMateriales: async () => {
+    const res = await apiEndPoint.get(`materiales/getMateriales`);
+    return res;
+  },
+  deleteMaterial: async (id) => {
+    const res = await apiEndPoint.delete(`materiales/deleteMaterial/${id}`);
+    return res;
+  },
+  getMaterialesAlu: async () => {
+    const res = await apiEndPoint.get(`materiales/getMaterialesAlu`);
+    return res;
+  },
+  getTestsAlu: async () => {
+    const res = await apiEndPoint.get(`utils/alumno/getTests`);
+    return res;
+  },
+  createTestActivity: async (data) => {
+    const res = await apiEndPoint.post(`actividades/createTestActivity`, data);
+    return res;
+  },
+  getTestsActivity: async () => {
+    const res = await apiEndPoint.get(`actividades/getTestsActivity`);
+    return res;
+  },
+  getVocabularyAlu: async () => {
+    const res = await apiEndPoint.get(`utils/alumno/getVocabularyAlu`);
+    return res;
+  },
+  getVocabularyActivity: async () => {
+    const res = await apiEndPoint.get(`actividades/getVocabularyActivity`);
+    return res;
+  },
+  getReadingActivity: async () => {
+    const res = await apiEndPoint.get(`actividades/getReadingActivity`);
+    return res;
+  }
 };

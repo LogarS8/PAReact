@@ -28,9 +28,9 @@ CREATE TABLE `usuarios` (
 
 CREATE TABLE `actividades` (
   `idAct` int NOT NULL AUTO_INCREMENT,
-  `nombreAct` varchar(45) NOT NULL,
-  `tipoAct` varchar(45) NOT NULL,
-  `estadoAct` boolean NOT NULL,
+  `tipoAct` varchar(100) NOT NULL,
+  `respuestaAct` varchar(100) NOT NULL,
+  `numeroAct` int NOT NULL,
   `idUsu` int NOT NULL,
   PRIMARY KEY (`idAct`),
   KEY `idUsu_idx` (`idUsu`)
@@ -63,5 +63,15 @@ create table `test`(
   `respuestaTes` varchar(300) null default null,
   `idUsu` int not null,
   primary key (`idTes`),
+  key `idUsu_idx` (`idUsu`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+create table `material` (
+  `idMat` int not null AUTO_INCREMENT,
+  `nombreMat` varchar(45) not null,
+  `textoMat` varchar(800) not null,
+  `fileMat` varchar(100) null default null,
+  `idUsu` int not null,
+  primary key (`idMat`),
   key `idUsu_idx` (`idUsu`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;

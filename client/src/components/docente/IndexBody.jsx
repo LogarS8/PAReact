@@ -59,9 +59,8 @@ const AlumnoSection = ({ data, setAlumnos }) => {
 };
 
 const IndexBody = () => {
-  const { user } = useContext(AuthContext);
+  const { user, code, setCode } = useContext(AuthContext);
 
-  const [code, setCode] = useState("");
   const [alumnos, setAlumnos] = useState([]);
   const [msg, setMsg] = useState("");
 
@@ -86,7 +85,7 @@ const IndexBody = () => {
       <div className="container-fluid">
         <div className="row pt-5">
           <div className="col-4 ">
-            <img src={`/public/uploads/${user.imgurlUsu}`} class="img-fluid rounded" alt="" height={30} width={30} />
+            <img src={`/public/uploads/${user?.image}`} className="img-fluid rounded" alt="" height={100} width={100} />
             <h3 className="text-dark mb-4">Bienvenido, {user?.lastName}</h3>
           </div>
           <div className="col-2 text-end" style={{ marginBottom: 30 }}>

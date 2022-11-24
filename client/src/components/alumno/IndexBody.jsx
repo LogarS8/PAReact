@@ -7,9 +7,8 @@ import { userAPI as api } from "../../API/userAPI";
 const MySwal = withReactContent(Swal);
 
 const IndexBody = () => {
-  const { user } = useContext(AuthContext);
+  const { user, code, setCode } = useContext(AuthContext);
 
-  const [code, setCode] = useState("");
   const [alumnos, setAlumnos] = useState([]);
   const [msg, setMsg] = useState("");
 
@@ -34,6 +33,7 @@ const IndexBody = () => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-12 col-sm-6 col-md-6 my-2">
+          <img src={`/public/uploads/${user?.image}`} class="img-fluid rounded" alt="" height={100} width={100} />
             <h3 className="text-dark my-4">Bienvenido {user?.lastName}</h3>
             <div className="col-md-12 search-table-col">
               <div className="form-group pull-right col-lg-4">
