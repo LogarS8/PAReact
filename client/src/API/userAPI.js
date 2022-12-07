@@ -2,7 +2,7 @@ import axios from "axios";
 export const apiEndPoint = axios.create({
   // https://breakandlearn.up.railway.app/
   // http://localhost:3000/
-  baseURL: "https://breakandlearn.up.railway.app/api/v1",
+  baseURL: "http://localhost:3000/api/v1",
 });
 
 export const userAPI = {

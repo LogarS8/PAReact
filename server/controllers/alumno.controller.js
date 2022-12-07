@@ -77,7 +77,6 @@ export const getCode = async (req, res) => {
       "select codiAluUsu from usuarios where idUsu = ?;",
       [id]
     );
-    console.log(rows);
     if (rows.length > 0) {
       res.json({
         message: "Código obtenido",

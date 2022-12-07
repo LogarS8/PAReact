@@ -93,13 +93,6 @@ const Signin = () => {
             if (validate(user)) {
 
               const formData = new FormData(e.target);
-              // formData.append("firstName", user.firstName);
-              // formData.append("lastName", user.lastName);
-              // formData.append("email", user.email);
-              // formData.append("password", user.password);
-              // formData.append("fileImg", image, image.name);
-              // formData.append("confirmPassword", user.confirmPassword);
-              // formData.append("image", user.image);
 
               const res = await userAPI.register(formData);
               if (res.data.status === 200) {

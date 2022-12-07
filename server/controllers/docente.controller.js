@@ -99,7 +99,12 @@ export const deleteStudent = async (req, res) => {
       "update usuarios set codiAluUsu = null where idUsu = ?;",
       [id]
     );
-    if (rows.affectedRows > 0) {
+
+    const [rows2] = await pool.query(
+      "delete from actividades where idUsu = ?;",
+      [id]
+    );
+    if(rows.affectedRows > 0 && rows2.affectedRows > 0){
       res.json({
         message: "Alumno eliminado",
         status: 200,
