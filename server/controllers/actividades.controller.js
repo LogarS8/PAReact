@@ -70,3 +70,37 @@ export const getVocabularyActivity = async (req, res) => {
   }
   return res.json({ message: "ok", status: 200, data: rows });
 }
+export const getReadingActivity = async (req, res) => {
+  const token = req.session?.token;
+  if (!token) {
+    return res.json({ message: "no estas logueado", status: 401 });
+  }
+  const { id } = jwt.verify(token, SECRET_KEY);
+  const [rows] = await pool.query(
+    "select * from actividades where idUsu = ? and tipoAct = ?;",
+    [id, "reading"]
+  );
+  if (rows.length === 0) {
+    return res.json({ message: "no hay actividades", status: 400 });
+  }
+  return res.json({ message: "ok", status: 200, data: rows });
+}
+export const createReadingActivity = async (req, res) => {
+  const { numeroLec, respuesta } = req.body;
+  if (!numeroLec || !respuesta) {
+    return res.json({ message: "faltan datos", status: 400 });
+  }
+  const token = req.session?.token;
+  if (!token) {
+    return res.json({ message: "no estas logueado", status: 401 });
+  }
+  const { id } = jwt.verify(token, SECRET_KEY);
+  const [rows3] = await pool.query(
+    "insert into actividades(tipoAct, respuestaAct, numeroAct, idUsu) values (?, ?, ?, ?);",
+    ["reading", respuesta, numeroLec, id]
+  );
+  if (rows3.length === 0) {
+    return res.json({ message: "no se pudo crear la actividad", status: 400 });
+  }
+  return res.redirect("/app/ejercicios/lectura"); 
+}

@@ -65,7 +65,7 @@ export const userAPI = {
     return res;
   },
   getLeccionesReading: async () => {
-    const res = await apiEndPoint.get(`lecciones/getLeccionesReading`);
+    const res = await apiEndPoint.get(`utils/alumno/getReadingAlu`);
     return res;
   },
   deleteLeccionReading: async (id) => {

@@ -63,15 +63,32 @@ export const getLeccionesVocabulary = async (req, res) => {
   }
 };
 export const deleteLeccionVocabulary = async (req, res) => {
-  const { id } = req.params;
+  const { id: idL } = req.params;
   const token = req.session?.token;
+
   if (token) {
     const [rows2] = await pool.query(
       "SELECT * FROM lecciones WHERE idLec = ?;",
-      [id]
+      [idL]
     );
     if (rows2.length > 0) {
       const { urlLec } = rows2[0];
+      const { id } = jwt.verify(token, SECRET_KEY);
+      const [codeResult] = await pool.query(
+        "select codi from codigos where idUsu = ?;",
+        [id]
+      );
+      const [alumnos] = await pool.query(
+        "select idUsu from usuarios where codiAluUsu = ?;",
+        [codeResult[0].codi]
+      );
+      for (let alumno of alumnos) {
+        const [rows] = await pool.query(
+          "delete from actividades where idUsu = ? and tipoAct = 'vocabulary' and numeroAct = ?;",
+          [alumno.idUsu, rows2[0].numeroLec]
+        );
+        console.log(rows)
+      }
       unlink(join(__public, `public/uploads/${urlLec}`), (err) =>
         console.log(err)
       )
@@ -84,8 +101,10 @@ export const deleteLeccionVocabulary = async (req, res) => {
     }
 
     const [rows] = await pool.query("DELETE FROM lecciones WHERE idLec = ?;", [
-      id,
+      idL,
     ]);
+
+
     if (rows.affectedRows > 0) {
       res.json({ message: "Lección eliminada", status: 200 });
     } else {

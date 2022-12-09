@@ -76,6 +76,7 @@ const IndexBody = () => {
                           text: `Codigo de clase: ${result.value}`,
                           icon: "success",
                         });
+                        setCode(result.value);
                       } else {
                         MySwal.fire({
                           title: "Error",

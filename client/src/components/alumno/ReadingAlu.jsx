@@ -24,6 +24,8 @@ const ReadingAlu = () => {
     async function fetchData() {
       try {
         const res = await api.getLeccionesReading();
+        console.log("getLeccionesReading");
+        console.log(res);
         if (res.data.status === 200) {
           res.data.data.forEach((item) => {
             setEjercicios((prev) => {
@@ -34,6 +36,8 @@ const ReadingAlu = () => {
           });
         }
         const res2 = await api.getReadingActivity();
+        console.log("getReadingActivity");
+        console.log(res2);
         if (res2.data.status === 200) {
           res2.data.data.forEach((item) => {
             setEjercicios((prev) => {
@@ -103,7 +107,15 @@ const ReadingAlu = () => {
                             alt="..."
                           />
                           <div className="card-body">
-                            <form>
+                            <form
+                              action="/api/v1/actividades/createReadingActivity"
+                              method="POST"
+                            >
+                              <input
+                                type="hidden"
+                                name="numeroLec"
+                                value={ejercicio[1].numeroLec}
+                              />
                               {numbers.map((number, index) => {
                                 const [respuesta, ...rest] =
                                   ejercicio[1]?.respuestaLec?.split(":::");
@@ -112,9 +124,10 @@ const ReadingAlu = () => {
                                     <div className="form-check" key={index}>
                                       <input
                                         className="form-check-input"
-                                        type="checkbox"
+                                        type="radio"
                                         id="flexCheckDefault"
                                         name="respuesta"
+                                        value={rest[index]}
                                       />
                                       <label
                                         className="form-check-label"
@@ -126,20 +139,28 @@ const ReadingAlu = () => {
                                   );
                                 }
                               })}
+
+                              <hr />
+                              <div className="d-grid gap-2">
+                                <button
+                                  className="btn btn-primary"
+                                  type="submit"
+                                >
+                                  Enviar respuesta
+                                </button>
+                              </div>
                             </form>
                             <br />
                           </div>
                         </div>
                       </>
-                    ) : (
-                      null
-                    )}
+                    ) : null}
                     {!ejercicio[1].idLec && ejercicio[1]?.state !== "done" ? (
                       <h4>Esperando a que el profesor asigne la leccion</h4>
-                    ):null}
+                    ) : null}
                     {ejercicio[1].state === "done" ? (
                       <h4>Ya has contestado esta leccion</h4>
-                    ):null}
+                    ) : null}
                   </div>
                 ))}
               </div>
