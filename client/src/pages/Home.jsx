@@ -1,6 +1,7 @@
 import React from "react";
 import { Header, Footer } from "../components/IndexModules";
 import { Link } from "react-router-dom";
+import swal from 'sweetalert2';
 
 
 const Home = () => {
@@ -51,7 +52,7 @@ const Home = () => {
               >
                 <img
                   className="w-100 h-100 fit-cover"
-                  src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png"
+                  src="https://t4.ftcdn.net/jpg/01/91/40/69/360_F_191406979_U8KHcV8ecFi2TROOMGtcU6dt70ypHyYc.jpg"
                 />
               </div>
             </div>
