@@ -209,7 +209,7 @@ export const getReadingAlu = async (req, res) => {
       );
       if (rows2.length > 0) {
         const [rows3] = await pool.query(
-          "select * from lecciones where idUsu = ? and tipoLec = 'reading';",
+          "select * from lecciones where idUsu = ? and tipoLec = 'writing';",
           [rows2[0].idUsu]
         );
         if (rows3.length > 0) {
@@ -233,6 +233,55 @@ export const getReadingAlu = async (req, res) => {
     } else {
       res.json({
         message: "No tienes lecturas",
+        status: 400,
+      });
+    }
+  } else {
+    res.json({
+      message: "No se ha iniciado sesión",
+      status: 400,
+    });
+  }
+}
+export const getWritingAlu = async (req, res) => {
+  const token = req.session?.token;
+  if (token) {
+    const { id } = jwt.verify(token, SECRET_KEY);
+    const [rows] = await pool.query(
+      "select codiAluUsu from usuarios where idUsu = ?;",
+      [id]
+    );
+    if (rows.length > 0) {
+      const [rows2] = await pool.query(
+        "select idUsu from codigos where codi = ?;",
+        [rows[0].codiAluUsu]
+      );
+      if (rows2.length > 0) {
+        const [rows3] = await pool.query(
+          "select * from lecciones where idUsu = ? and tipoLec = 'writing';",
+          [rows2[0].idUsu]
+        );
+        if (rows3.length > 0) {
+          res.json({
+            message: "escrituras obtenidas",
+            status: 200,
+            data: rows3,
+          });
+        } else {
+          res.json({
+            message: "No se han encontrado escrituras",
+            status: 400,
+          });
+        }
+      } else {
+        res.json({
+          message: "No se han encontrado escrituras",
+          status: 400,
+        });
+      }
+    } else {
+      res.json({
+        message: "No tienes escrituras",
         status: 400,
       });
     }

@@ -102,5 +102,39 @@ export const createReadingActivity = async (req, res) => {
   if (rows3.length === 0) {
     return res.json({ message: "no se pudo crear la actividad", status: 400 });
   }
-  return res.redirect("/app/ejercicios/lectura"); 
+  return res.redirect("/app/ejercicios/"); 
+}
+export const createWritingActivity = async (req, res) => {
+  const { numeroLec, respuesta } = req.body;
+  if (!numeroLec || !respuesta) {
+    return res.json({ message: "faltan datos", status: 400 });
+  }
+  const token = req.session?.token;
+  if (!token) {
+    return res.json({ message: "no estas logueado", status: 401 });
+  }
+  const { id } = jwt.verify(token, SECRET_KEY);
+  const [rows3] = await pool.query(
+    "insert into actividades(tipoAct, respuestaAct, numeroAct, idUsu) values (?, ?, ?, ?);",
+    ["writing", respuesta, numeroLec, id]
+  );
+  if (rows3.length === 0) {
+    return res.json({ message: "no se pudo crear la actividad", status: 400 });
+  }
+  return res.redirect("/app/ejercicios/");
+}
+export const getWritingActivity = async (req, res) => {
+  const token = req.session?.token;
+  if (!token) {
+    return res.json({ message: "no estas logueado", status: 401 });
+  }
+  const { id } = jwt.verify(token, SECRET_KEY);
+  const [rows] = await pool.query(
+    "select * from actividades where idUsu = ? and tipoAct = ?;",
+    [id, "writing"]
+  );
+  if (rows.length === 0) {
+    return res.json({ message: "no hay actividades", status: 400 });
+  }
+  return res.json({ message: "ok", status: 200, data: rows });
 }

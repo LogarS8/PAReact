@@ -6,6 +6,8 @@ import {
   getVocabularyActivity,
   getReadingActivity,
   createReadingActivity,
+  createWritingActivity,
+  getWritingActivity
 } from "../controllers/actividades.controller.js";
 
 const router = Router();
@@ -18,5 +20,8 @@ router.get("/getVocabularyActivity", getVocabularyActivity);
 
 router.post("/createReadingActivity", createReadingActivity);
 router.get("/getReadingActivity", getReadingActivity);
+
+router.post("/createWritingActivity", createWritingActivity);
+router.get("/getWritingActivity", getWritingActivity);
 
 export default router;

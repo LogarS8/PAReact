@@ -2,7 +2,7 @@ import axios from "axios";
 export const apiEndPoint = axios.create({
   // https://breakandlearn.up.railway.app/
   // http://localhost:3000/
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://breakandlearn.up.railway.app/api/v1",
 });
 
 export const userAPI = {
@@ -65,7 +65,7 @@ export const userAPI = {
     return res;
   },
   getLeccionesReading: async () => {
-    const res = await apiEndPoint.get(`utils/alumno/getReadingAlu`);
+    const res = await apiEndPoint.get(`lecciones/getLeccionesReading`);
     return res;
   },
   deleteLeccionReading: async (id) => {
@@ -134,8 +134,21 @@ export const userAPI = {
     const res = await apiEndPoint.get(`actividades/getVocabularyActivity`);
     return res;
   },
+  getReadingAlu: async () => {
+    const res = await apiEndPoint.get(`utils/alumno/getReadingAlu`);
+    return res;
+  },
   getReadingActivity: async () => {
     const res = await apiEndPoint.get(`actividades/getReadingActivity`);
     return res;
-  }
+  },
+  getWritingAlu: async () => {
+    const res = await apiEndPoint.get(`utils/alumno/getWritingAlu`);
+    return res;
+  },
+  getWritingActivity: async () => {
+    const res = await apiEndPoint.get(`actividades/getWritingActivity`);
+    return res;
+  },
+  getAlumnos
 };

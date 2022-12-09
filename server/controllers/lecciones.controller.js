@@ -175,7 +175,23 @@ export const deleteLeccionWriting = async (req, res) => {
       [id]
     );
     if (rows2.length > 0) {
-      const { urlLec } = rows2[0];
+      const { urlLec, numeroLec } = rows2[0];
+      const { id } = jwt.verify(token, SECRET_KEY);
+      const [codeResult] = await pool.query(
+        "select codi from codigos where idUsu = ?;",
+        [id]
+      );
+      const [alumnos] = await pool.query(
+        "select idUsu from usuarios where codiAluUsu = ?;",
+        [codeResult[0].codi]
+      );
+      for (let alumno of alumnos) {
+        const [rows] = await pool.query(
+          "delete from actividades where idUsu = ? and tipoAct = 'writing' and numeroAct = ?;",
+          [alumno.idUsu, numeroLec]
+        );
+        console.log(rows)
+      }
       unlink(join(__public, `public/uploads/${urlLec}`), (err) =>
         console.log(err)
       )
@@ -265,7 +281,23 @@ export const deleteLeccionReading = async (req, res) => {
       [id]
     );
     if (rows2.length > 0) {
-      const { urlLec } = rows2[0];
+      const { urlLec, numeroLec } = rows2[0];
+      const { id } = jwt.verify(token, SECRET_KEY);
+      const [codeResult] = await pool.query(
+        "select codi from codigos where idUsu = ?;",
+        [id]
+      );
+      const [alumnos] = await pool.query(
+        "select idUsu from usuarios where codiAluUsu = ?;",
+        [codeResult[0].codi]
+      );
+      for (let alumno of alumnos) {
+        const [rows] = await pool.query(
+          "delete from actividades where idUsu = ? and tipoAct = 'reading' and numeroAct = ?;",
+          [alumno.idUsu, numeroLec]
+        );
+        console.log(rows)
+      }
       unlink(join(__public, `public/uploads/${urlLec}`), (err) =>
         console.log(err)
       )

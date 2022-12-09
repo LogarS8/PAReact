@@ -23,7 +23,7 @@ const ReadingAlu = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await api.getLeccionesReading();
+        const res = await api.getReadingAlu();
         console.log("getLeccionesReading");
         console.log(res);
         if (res.data.status === 200) {

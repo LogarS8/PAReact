@@ -6,6 +6,7 @@ import {
   getTests,
   getVocabularyAlu,
   getReadingAlu,
+  getWritingAlu
 } from "../controllers/alumno.controller.js";
 
 const router = Router();
@@ -17,5 +18,6 @@ router.get("/getCode", getCode);
 router.get("/getTests", getTests);
 router.get("/getVocabularyAlu", getVocabularyAlu);
 router.get("/getReadingAlu", getReadingAlu);
+router.get("/getWritingAlu", getWritingAlu);
 
 export default router;

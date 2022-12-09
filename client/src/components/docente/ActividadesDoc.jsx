@@ -13,6 +13,10 @@ const ActividadesDoc = () => {
     }
   }, [code]);
 
+  useEffect(()=>{
+    
+  })
+
   return (
     <div>
       <div className="container-fluid" style={{ paddingTop: 26 }}>

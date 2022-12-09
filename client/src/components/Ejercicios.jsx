@@ -6,6 +6,7 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import AuthContext from "../context/auth/AuthProvider";
 import ReadingDoc from "./docente/ReadingDoc";
 import WritingDoc from "./docente/WritingDoc";
+import WritingAlu from "./alumno/WritingAlu";
 import ListeningDoc from "./docente/ListeningDoc";
 import TestDoc from "./docente/TestDoc";
 import TestAlu from "./alumno/TestAlu";
@@ -476,7 +477,7 @@ const Ejercicios = () => {
         /> */}
         <Route
           path="/writing"
-          element={rol === "docente" ? <WritingDoc /> : <h1>writing alu</h1>}
+          element={rol === "docente" ? <WritingDoc /> : <WritingAlu />}
         />
         <Route
           path="/test"
