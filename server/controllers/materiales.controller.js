@@ -28,6 +28,12 @@ export const createMaterial = async (req, res) => {
     const { id } = jwt.verify(token, SECRET_KEY);
     const { nombre, texto} = req.body;
     const filename = req.file?.filename;
+    if(filename.split(".")[1] !== "pdf"){
+      await unlink(join(__public, `public/uploads/${filename}`), (err) =>
+        console.log(err)
+      );
+      return res.json({ message: "Solo se permiten archivos pdf", status: 400 });
+    }
     const [rows] = await pool.query(
       `INSERT INTO material (nombreMat, textoMat, fileMat, idUsu) VALUES (?, ?, ?, ?)`,
       [nombre, texto, filename, id]

@@ -7,8 +7,10 @@ import {
   getReadingActivity,
   createReadingActivity,
   createWritingActivity,
-  getWritingActivity
+  getWritingActivity,
+  getActividades
 } from "../controllers/actividades.controller.js";
+import multer from "../multer.js";
 
 const router = Router();
 
@@ -21,7 +23,9 @@ router.get("/getVocabularyActivity", getVocabularyActivity);
 router.post("/createReadingActivity", createReadingActivity);
 router.get("/getReadingActivity", getReadingActivity);
 
-router.post("/createWritingActivity", createWritingActivity);
+router.post("/createWritingActivity", multer, createWritingActivity);
 router.get("/getWritingActivity", getWritingActivity);
+
+router.get("/getActividades/:id", getActividades)
 
 export default router;

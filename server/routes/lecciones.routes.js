@@ -19,7 +19,7 @@ router.post("/crearLeccionVocabulary", multer, crearLeccionVocabulary);
 router.get("/getLeccionesVocabulary", getLeccionesVocabulary);
 router.delete("/deleteLeccionVocabulary/:id", deleteLeccionVocabulary);
 
-router.post("/crearLeccionWriting", multer, crearLeccionWriting);
+router.post("/crearLeccionWriting", crearLeccionWriting);
 router.get("/getLeccionesWriting", getLeccionesWriting);
 router.delete("/deleteLeccionWriting/:id", deleteLeccionWriting);
 

@@ -96,11 +96,6 @@ const WritingAlu = () => {
                   >
                     {item[1].idLec ? (
                       <div className="card mb-3">
-                        <img
-                          src={`../../public/uploads/${item[1].urlLec}`}
-                          className="card-img-top"
-                          alt="..."
-                        />
                         <div className="card-body">
                           <h5 className="card-title">Lección {item[0]}</h5>
                           <hr />
@@ -109,18 +104,21 @@ const WritingAlu = () => {
                         <form
                           action="/api/v1/actividades/createWritingActivity"
                           method="POST"
+                          encType="multipart/form-data"
                         >
                           <input
                             type="hidden"
                             name="numeroLec"
                             value={item[1].numeroLec}
                           />
-                          <h5 className="card-title">Introduce la respuesta</h5>
+                          <h5 className="card-title">Introduce tu actividad</h5>
                           <input
-                            type="text"
+                            type="file"
                             className="form-control"
+                            // accept only pdfs
+                            accept=".pdf"
                             id={`inputPassword3-${item[0]}`}
-                            name="respuesta"
+                            name="fileImg"
                           />
                           <br />
                           <hr />

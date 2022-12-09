@@ -49,7 +49,6 @@ const MaterialDoc = () => {
                       <a
                         className="dropdown-item"
                         href={`#scrollspyHeading${index + 1}`}
-                        target="_blank"
                       >
                         {`#${index + 1}`}
                       </a>

@@ -47,7 +47,7 @@ CREATE TABLE `codigos` (
 
 CREATE TABLE `lecciones` (
   `idLec` int NOT NULL AUTO_INCREMENT,
-  `urlLec` varchar(100) NOT NULL,
+  `urlLec` varchar(100) NULL,
   `tipoLec` varchar(45) NOT NULL,
   `respuestaLec` varchar(300) NOT NULL,
   `numeroLec` int NOT NULL,

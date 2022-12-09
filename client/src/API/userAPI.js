@@ -153,5 +153,9 @@ export const userAPI = {
   getAlumnos: async ()=>{
     const res = await apiEndPoint.get(`utils/docente/getAlumnos`);
     return res;
+  },
+  getActividades: async (id) =>{
+    const res = await apiEndPoint.get(`actividades/getActividades/${id}`);
+    return res;
   }
 };

@@ -1,10 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userAPI as api } from "../../API/userAPI";
 import AuthContext from "../../context/auth/AuthProvider";
 
 const ActividadesDoc = () => {
-  const {code} = useContext(AuthContext)
+  const { code } = useContext(AuthContext);
 
   const nav = useNavigate();
 
@@ -14,13 +14,34 @@ const ActividadesDoc = () => {
     }
   }, [code]);
 
-  useEffect(()=>{
+  const [alumnos, setAlumnos] = useState([]);
+  const [selected, setSelected] = useState(0);
+  const [actividades, setActividades] = useState([]);
+
+  useEffect(() => {
     async function fetchAlumnos() {
-      const res = await api.getAlumnos()
-      console.log(res)
+      const res = await api.getAlumnos();
+      console.log(res);
+      if (res.data.status === 200) {
+        setAlumnos(res.data.alumnos);
+        setSelected(res.data.alumnos[0].idUsu);
+      }
     }
-    fetchAlumnos()
-  })
+    fetchAlumnos();
+  }, []);
+
+  useEffect(() => {
+    async function fetchActividades() {
+      const res = await api.getActividades(selected);
+      console.log(res);
+      if (res.data.status === 200) {
+        setActividades(res.data.data);
+      } else {
+        setActividades([]);
+      }
+    }
+    fetchActividades();
+  }, [selected]);
 
   return (
     <div>
@@ -38,11 +59,20 @@ const ActividadesDoc = () => {
                 style={{ margin: 0, padding: [5, 15] }}
               >
                 <div className="select">
-                  <select>
+                  <select
+                    onChange={(v) => {
+                      setSelected(v.target.value);
+                    }}
+                    className="form-select"
+                  >
                     <optgroup label="Elige a un alumno">
-                      <option value="12" selected="">
-                        Rodrigo
-                      </option>
+                      {alumnos.map((alumno) => {
+                        return (
+                          <option value={alumno.idUsu}>
+                            {alumno.nombreUsu}
+                          </option>
+                        );
+                      })}
                     </optgroup>
                   </select>
                 </div>
@@ -57,58 +87,96 @@ const ActividadesDoc = () => {
           <div className="row">
             <div className="col">
               <div className="row">
-                <div className="col-md-6 col-xl-3 mb-4">
-                  <div className="card shadow border-start-primary py-2">
-                    <div
-                      className="card-body"
-                      style={{ paddingBottom: 0, paddingTop: 0 }}
-                    >
-                      <div className="row align-items-center no-gutters">
-                        <div className="col me-2">
-                          <div className="text-uppercase text-primary fw-bold text-xs mb-1">
-                            <span
-                              style={{
-                                fontSize: 12,
-                                color: "var(--bs-primary)",
-                              }}
-                            >
-                              actividad 1
-                            </span>
-                          </div>
-                          <div
-                            className="text-dark fw-bold h5 mb-0"
-                            style={{ marginTop: -6 }}
-                          >
-                            <span style={{ fontSize: 14 }}></span>
-                            <span style={{ fontSize: 14 }}>Incompleto</span>
-                            <span
-                              style={{
-                                fontSize: 10,
-                                marginLeft: 12,
-                                color: "var(--bs-gray-600)",
-                              }}
-                            >
-                              0/10
-                            </span>
-                          </div>
-                        </div>
-                        <div className="col-auto">
-                          <i
-                            className="fas fa-medal fa-2x"
-                            data-bs-toggle="tooltip"
-                            data-bss-tooltip=""
-                            style={{
-                              color: "var(--bs-yellow)",
-                              fontSize: 28,
-                              marginTop: 4,
-                            }}
-                            title="Asignar medalla"
-                          ></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {selected === 0 ? (
+                  <h4 className="text-primary m-0 fw-bold">
+                    SELECCIONE UN ALUMNO
+                  </h4>
+                ) : (
+                  <>
+                    {actividades.length === 0 ? (
+                      <h4 className="text-primary m-0 fw-bold">
+                        NO HAY ACTIVIDADES
+                      </h4>
+                    ) : null}
+                    {actividades.length > 0 ? (
+                      <>
+                        {actividades.map((actividad, index) => (
+                          <>
+                            <div className="col-md-6 col-xl-3 mb-4" key={index}>
+                              <div className="card shadow border-start-primary py-2">
+                                <div
+                                  className="card-body"
+                                  style={{ paddingBottom: 0, paddingTop: 0 }}
+                                >
+                                  <div className="row align-items-center no-gutters">
+                                    <div className="col me-2">
+                                      <div className="text-uppercase text-primary fw-bold text-xs mb-1">
+                                        <span
+                                          style={{
+                                            fontSize: 12,
+                                            color: "var(--bs-primary)",
+                                          }}
+                                        >
+                                          Actividad:{" "}
+                                          {actividad?.tipoAct +
+                                            " " +
+                                            actividad?.numeroAct}
+                                        </span>
+                                      </div>
+                                      <div
+                                        className="text-dark fw-bold h5 mb-0"
+                                        style={{ marginTop: -6 }}
+                                      >
+                                        <span style={{ fontSize: 14 }}>
+                                          Respuesta del alumno:{" "}
+                                          {actividad?.respuestaAct.endsWith(".pdf") ? (
+                                            <a
+                                              href={`../public/uploads/${actividad?.respuestaAct}`}
+                                            >
+                                              <i
+                                                className="fas fa-file-pdf"
+                                                style={{
+                                                  color: "var(--bs-red)",
+                                                  fontSize: 20,
+                                                }}
+                                              ></i>
+                                            </a>
+                                          ):actividad?.respuestaAct}
+                                        </span>
+                                        <span
+                                          style={{
+                                            fontSize: 10,
+                                            marginLeft: 12,
+                                            color: "var(--bs-gray-600)",
+                                          }}
+                                        >
+                                          0/10
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="col-auto">
+                                      <i
+                                        className="fas fa-medal fa-2x"
+                                        data-bs-toggle="tooltip"
+                                        data-bss-tooltip=""
+                                        style={{
+                                          color: "var(--bs-yellow)",
+                                          fontSize: 28,
+                                          marginTop: 4,
+                                        }}
+                                        title="Asignar medalla"
+                                      ></i>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        ))}
+                      </>
+                    ) : null}
+                  </>
+                )}
               </div>
             </div>
           </div>

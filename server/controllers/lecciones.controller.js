@@ -87,7 +87,7 @@ export const deleteLeccionVocabulary = async (req, res) => {
           "delete from actividades where idUsu = ? and tipoAct = 'vocabulary' and numeroAct = ?;",
           [alumno.idUsu, rows2[0].numeroLec]
         );
-        console.log(rows)
+        console.log(rows);
       }
       unlink(join(__public, `public/uploads/${urlLec}`), (err) =>
         console.log(err)
@@ -104,7 +104,6 @@ export const deleteLeccionVocabulary = async (req, res) => {
       idL,
     ]);
 
-
     if (rows.affectedRows > 0) {
       res.json({ message: "Lección eliminada", status: 200 });
     } else {
@@ -117,14 +116,13 @@ export const deleteLeccionVocabulary = async (req, res) => {
 
 export const crearLeccionWriting = async (req, res) => {
   const { data, numero } = req.body;
-  const filename = req?.file?.filename;
-  if (!data || !numero || !filename) {
+  if (!data || !numero) {
     return res.redirect("/app/ejercicios/writing");
   }
   const token = req.session?.token;
   if (token) {
     const { id } = jwt.verify(token, SECRET_KEY);
-    const data1 = [filename, "writing", data, numero, id];
+    const data1 = ["writing", data, numero, id];
     const [rows2] = await pool.query(
       "SELECT * FROM lecciones WHERE numeroLec = ? and tipoLec = 'writing' and idUsu = ?;",
       [numero, id]
@@ -137,7 +135,7 @@ export const crearLeccionWriting = async (req, res) => {
       });
     }
     const [rows] = await pool.query(
-      "insert into lecciones(urlLec, tipoLec, respuestaLec, numeroLec, idUsu) values (?, ?, ?, ?, ?);",
+      "insert into lecciones(tipoLec, respuestaLec, numeroLec, idUsu) values (?, ?, ?, ?);",
       data1
     );
     if (rows.affectedRows > 0) {
@@ -176,43 +174,54 @@ export const deleteLeccionWriting = async (req, res) => {
     );
     if (rows2.length > 0) {
       const { urlLec, numeroLec } = rows2[0];
-      const { id } = jwt.verify(token, SECRET_KEY);
+      const { id: idU } = jwt.verify(token, SECRET_KEY);
       const [codeResult] = await pool.query(
         "select codi from codigos where idUsu = ?;",
-        [id]
+        [idU]
       );
       const [alumnos] = await pool.query(
         "select idUsu from usuarios where codiAluUsu = ?;",
         [codeResult[0].codi]
       );
       for (let alumno of alumnos) {
-        const [rows] = await pool.query(
-          "delete from actividades where idUsu = ? and tipoAct = 'writing' and numeroAct = ?;",
+        const [url] = await pool.query(
+          "select respuestaAct from actividades where idUsu = ? and tipoAct = 'writing' and numeroAct = ?;",
           [alumno.idUsu, numeroLec]
         );
-        console.log(rows)
+        if (url.length > 0) {
+          unlink(
+            join(__public, `public/uploads/${url[0].respuestaAct}`),
+            (err) => console.log(err)
+          )
+            .then(() => {
+              console.log("Archivo eliminado");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+        unlink(join(__public, `public/uploads/${urlLec}`), (err) =>
+          console.log(err)
+        )
+          .then(() => {
+            console.log("Archivo eliminado");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        const [rows] = await pool.query(
+          "DELETE FROM lecciones WHERE idLec = ?;",
+          [id]
+        );
+        if (rows.affectedRows > 0) {
+          return res.json({ message: "Lección eliminada", status: 200 });
+        } else {
+          return res.json({ message: "Error al eliminar la lección", status: 400 });
+        }
       }
-      unlink(join(__public, `public/uploads/${urlLec}`), (err) =>
-        console.log(err)
-      )
-        .then(() => {
-          console.log("Archivo eliminado");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-
-    const [rows] = await pool.query("DELETE FROM lecciones WHERE idLec = ?;", [
-      id,
-    ]);
-    if (rows.affectedRows > 0) {
-      res.json({ message: "Lección eliminada", status: 200 });
-    } else {
-      res.json({ message: "Error al eliminar la lección", status: 400 });
     }
   } else {
-    res.json({ message: "No se ha iniciado sesión", status: 400 });
+    return res.json({ message: "No se ha iniciado sesión", status: 400 });
   }
 };
 export const crearLeccionReading = async (req, res) => {
@@ -296,7 +305,7 @@ export const deleteLeccionReading = async (req, res) => {
           "delete from actividades where idUsu = ? and tipoAct = 'reading' and numeroAct = ?;",
           [alumno.idUsu, numeroLec]
         );
-        console.log(rows)
+        console.log(rows);
       }
       unlink(join(__public, `public/uploads/${urlLec}`), (err) =>
         console.log(err)

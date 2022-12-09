@@ -76,6 +76,7 @@ const WritingDoc = () => {
                 {ejercicios.map((item, index) => (
                   <div
                     className="tab-pane"
+                    style={{ width: "100%!important" }}
                     role="tabpanel"
                     id={`tab-${item[0]}`}
                     key={index}
@@ -83,11 +84,6 @@ const WritingDoc = () => {
                     {item[1].idLec ? (
                       <>
                         <div className="card mb-3">
-                          <img
-                            src={`../../public/uploads/${item[1].urlLec}`}
-                            className="card-img-top"
-                            alt="..."
-                          />
                           <div className="card-body">
                             <h5 className="card-title">Lección {item[0]}</h5>
                             <hr />
@@ -99,11 +95,12 @@ const WritingDoc = () => {
                             className="btn btn-danger"
                             type="button"
                             onClick={async () => {
+                              console.log("que pedo ")
                               const res = await api.deleteLeccionWriting(
                                 item[1].idLec
                               );
                               console.log(res);
-                              if (res.data.status) {
+                              if (res.data.status === 200) {
                                 MySwal.fire({
                                   icon: "success",
                                   title: "Lección eliminada",
@@ -134,7 +131,6 @@ const WritingDoc = () => {
                         <form
                           action="/api/v1/lecciones/crearLeccionWriting"
                           method="POST"
-                          encType="multipart/form-data"
                         >
                           <input
                             type={"hidden"}
@@ -153,7 +149,7 @@ const WritingDoc = () => {
                               Ingresa las instrucciones de la asignacion
                             </label>
                           </div>
-                          <div className="mb-3">
+                          {/* <div className="mb-3">
                             <label htmlFor="formFileSm" className="form-label">
                               <h2>Elige el archivo correspondiente</h2>
                             </label>
@@ -163,7 +159,7 @@ const WritingDoc = () => {
                               type="file"
                               name="fileImg"
                             />
-                          </div>
+                          </div> */}
                           <div className="col-auto">
                             <button
                               type="submit"

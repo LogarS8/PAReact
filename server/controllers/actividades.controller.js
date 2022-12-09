@@ -69,7 +69,7 @@ export const getVocabularyActivity = async (req, res) => {
     return res.json({ message: "no hay actividades", status: 400 });
   }
   return res.json({ message: "ok", status: 200, data: rows });
-}
+};
 export const getReadingActivity = async (req, res) => {
   const token = req.session?.token;
   if (!token) {
@@ -84,7 +84,7 @@ export const getReadingActivity = async (req, res) => {
     return res.json({ message: "no hay actividades", status: 400 });
   }
   return res.json({ message: "ok", status: 200, data: rows });
-}
+};
 export const createReadingActivity = async (req, res) => {
   const { numeroLec, respuesta } = req.body;
   if (!numeroLec || !respuesta) {
@@ -102,10 +102,11 @@ export const createReadingActivity = async (req, res) => {
   if (rows3.length === 0) {
     return res.json({ message: "no se pudo crear la actividad", status: 400 });
   }
-  return res.redirect("/app/ejercicios/"); 
-}
+  return res.redirect("/app/ejercicios/");
+};
 export const createWritingActivity = async (req, res) => {
-  const { numeroLec, respuesta } = req.body;
+  const { numeroLec } = req.body;
+  const respuesta = req?.file?.filename;
   if (!numeroLec || !respuesta) {
     return res.json({ message: "faltan datos", status: 400 });
   }
@@ -122,7 +123,7 @@ export const createWritingActivity = async (req, res) => {
     return res.json({ message: "no se pudo crear la actividad", status: 400 });
   }
   return res.redirect("/app/ejercicios/");
-}
+};
 export const getWritingActivity = async (req, res) => {
   const token = req.session?.token;
   if (!token) {
@@ -137,4 +138,39 @@ export const getWritingActivity = async (req, res) => {
     return res.json({ message: "no hay actividades", status: 400 });
   }
   return res.json({ message: "ok", status: 200, data: rows });
-}
+};
+export const getActividades = async (req, res) => {
+  const {id} = req.params;
+  console.log(id);
+  if (id) {
+    console.log("aqui no deberia entrar");
+    const token = req.session?.token;
+    if (!token) {
+      return res.json({ message: "no estas logueado", status: 401 });
+    }
+    const [rows] = await pool.query(
+      "select * from actividades where idUsu = ?;",
+      [id]
+    );
+    if (rows.length === 0) {
+      return res.json({ message: "no hay actividades", status: 400 });
+    }
+    return res.json({ message: "ok", status: 200, data: rows });
+  }else{
+    console.log("deberia entrar")
+    const token = req.session?.token;
+    if (!token) {
+      return res.json({ message: "no estas logueado", status: 401 });
+    }
+    const { id: idU } = jwt.verify(token, SECRET_KEY);
+    const [rows] = await pool.query(
+      "select * from actividades where idUsu = ?;",
+      [idU]
+    );
+    console.log(rows)
+    if (rows.length === 0) {
+      return res.json({ message: "no hay actividades", status: 400 });
+    }
+    return res.json({ message: "ok", status: 200, data: rows });
+  }
+};

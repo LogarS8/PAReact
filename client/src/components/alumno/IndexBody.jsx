@@ -27,13 +27,33 @@ const IndexBody = () => {
     }
     fetchCode();
   }, []);
+  const [actividades, setActividades] = useState([]);
+
+  useEffect(() => {
+    async function fetchActividades() {
+      const res = await api.getActividades();
+      console.log(res);
+      if (res.data.status === 200) {
+        setActividades(res.data.data);
+      } else {
+        setActividades([]);
+      }
+    }
+    fetchActividades();
+  }, []);
 
   return (
     <div>
       <div className="container-fluid">
         <div className="row">
           <div className="col-12 col-sm-6 col-md-6 my-2">
-          <img src={`/public/uploads/${user?.image}`} class="img-fluid rounded" alt="" height={100} width={100} />
+            <img
+              src={`/public/uploads/${user?.image}`}
+              class="img-fluid rounded"
+              alt=""
+              height={100}
+              width={100}
+            />
             <h3 className="text-dark my-4">Bienvenido {user?.lastName}</h3>
             <div className="col-md-12 search-table-col">
               <div className="form-group pull-right col-lg-4">
@@ -120,7 +140,7 @@ const IndexBody = () => {
                 >
                   <thead className="thead-dark">
                     <tr>
-                      <th className="text-center">Actividad</th>
+                      <th className="text-center">Respuesta</th>
                       <th className="text-center">Estado</th>
                       <th className="text-center">TIPO</th>
                       <th className="text-center filter-false sorter-false">
@@ -129,62 +149,80 @@ const IndexBody = () => {
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                    <tr>
-                      <td>Ejemplo</td>
-                      <td>
-                        <p
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          title="Completado"
-                        >
-                          <i className="fas fa-check text-info"></i>
-                        </p>
-                      </td>
-                      <td>Writing</td>
-                      <td
-                        className="text-center align-middle"
-                        style={{ maxHeight: 60, height: 60 }}
-                      >
-                        <a
-                          className="btn btnMaterial btn-flat primary semicircle"
-                          role="button"
-                          data-bs-toggle="tooltip"
-                          data-bss-tooltip=""
-                          href="show.html"
-                          title="Ver detalles"
-                        >
-                          <i className="far fa-eye"></i>
-                        </a>
-                        <a
-                          className="btn btnMaterial btn-flat success semicircle"
-                          role="button"
-                          href="create-document.html"
-                        >
-                          <i
-                            className="fas fa-pen"
-                            data-bs-toggle="tooltip"
-                            data-bss-tooltip=""
-                            title="Editar"
-                          ></i>
-                        </a>
-                        <a
-                          className="btn btnMaterial btn-flat accent btnNoBorders checkboxHover"
-                          role="button"
-                          data-bs-toggle="modal"
-                          data-bss-tooltip=""
-                          style={{ marginLeft: 5 }}
-                          data-bs-target="#delete-modal"
-                          href="#"
-                          title="Eliminar"
-                        >
-                          <i
-                            className="fas fa-trash btnNoBorders"
-                            style={{ color: "#DC3545" }}
-                          ></i>
-                        </a>
-                      </td>
-                    </tr>
-                    <tr></tr>
+                    {actividades.length === 0 ? (
+                      <tr>
+                        <td colSpan={4}>No hay actividades</td>
+                      </tr>
+                    ) : (
+                      actividades.map((actividad, index) => (
+                        <tr key={index}>
+                          <td>
+                            {actividad.respuestaAct.endsWith(".pdf") ? (
+                              <a
+                                href={`../public/uploads/${actividad.respuestaAct}`}
+                                target="_blank"
+                              >
+                                Ver archivo
+                              </a>
+                            ) : (
+                              actividad.respuestaAct
+                            )}
+                          </td>
+                          <td>
+                            <p
+                              data-bs-toggle="tooltip"
+                              data-bss-tooltip=""
+                              title="Completado"
+                            >
+                              <i className="fas fa-check text-info"></i>
+                            </p>
+                          </td>
+                          <td>Writing</td>
+                          <td
+                            className="text-center align-middle"
+                            style={{ maxHeight: 60, height: 60 }}
+                          >
+                            <a
+                              className="btn btnMaterial btn-flat primary semicircle"
+                              role="button"
+                              data-bs-toggle="tooltip"
+                              data-bss-tooltip=""
+                              href="show.html"
+                              title="Ver detalles"
+                            >
+                              <i className="far fa-eye"></i>
+                            </a>
+                            <a
+                              className="btn btnMaterial btn-flat success semicircle"
+                              role="button"
+                              href="create-document.html"
+                            >
+                              <i
+                                className="fas fa-pen"
+                                data-bs-toggle="tooltip"
+                                data-bss-tooltip=""
+                                title="Editar"
+                              ></i>
+                            </a>
+                            <a
+                              className="btn btnMaterial btn-flat accent btnNoBorders checkboxHover"
+                              role="button"
+                              data-bs-toggle="modal"
+                              data-bss-tooltip=""
+                              style={{ marginLeft: 5 }}
+                              data-bs-target="#delete-modal"
+                              href="#"
+                              title="Eliminar"
+                            >
+                              <i
+                                className="fas fa-trash btnNoBorders"
+                                style={{ color: "#DC3545" }}
+                              ></i>
+                            </a>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
