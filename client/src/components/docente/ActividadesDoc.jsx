@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { userAPI as api } from "../../API/userAPI";
 import AuthContext from "../../context/auth/AuthProvider";
 
 const ActividadesDoc = () => {
@@ -14,7 +15,11 @@ const ActividadesDoc = () => {
   }, [code]);
 
   useEffect(()=>{
-    
+    async function fetchAlumnos() {
+      const res = await api.getAlumnos()
+      console.log(res)
+    }
+    fetchAlumnos()
   })
 
   return (

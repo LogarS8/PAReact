@@ -150,5 +150,8 @@ export const userAPI = {
     const res = await apiEndPoint.get(`actividades/getWritingActivity`);
     return res;
   },
-  getAlumnos
+  getAlumnos: async ()=>{
+    const res = await apiEndPoint.get(`utils/docente/getAlumnos`);
+    return res;
+  }
 };

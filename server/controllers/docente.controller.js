@@ -125,3 +125,34 @@ export const deleteStudent = async (req, res) => {
   }
     
 };
+export const getAlumnos = async (req, res)=>{
+  const token = req.session?.token;
+  if(!token){
+    res.json({
+      message: "No se ha iniciado sesión",
+      status: 400,
+    });
+  }
+  const { id } = jwt.verify(token, SECRET_KEY);
+  const [rows] = await pool.query("select codi from codigos where idUsu = ?;", [id]);
+  if(rows.length > 0){
+    const [rows2] = await pool.query("select * from usuarios where codiAluUsu = ?;", [rows[0].codi]);
+    if(rows2.length > 0){
+      res.json({
+        message: "Alumnos obtenidos",
+        status: 200,
+        alumnos: rows2,
+      });
+    }else{
+      res.json({
+        message: "No tienes alumnos",
+        status: 400,
+      });
+    }
+  }else{
+    res.json({
+      message: "No tienes alumnos",
+      status: 400,
+    });
+  }
+}
