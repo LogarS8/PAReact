@@ -216,7 +216,10 @@ export const deleteLeccionWriting = async (req, res) => {
         if (rows.affectedRows > 0) {
           return res.json({ message: "Lección eliminada", status: 200 });
         } else {
-          return res.json({ message: "Error al eliminar la lección", status: 400 });
+          return res.json({
+            message: "Error al eliminar la lección",
+            status: 400,
+          });
         }
       }
     }
@@ -225,9 +228,9 @@ export const deleteLeccionWriting = async (req, res) => {
   }
 };
 export const crearLeccionReading = async (req, res) => {
-  const { respuesta, numero, opciones } = req.body;
+  const { respuesta, numero, opciones, pregunta } = req.body;
   const filename = req?.file?.filename;
-  if (!respuesta || !numero || !opciones || !filename) {
+  if (!respuesta || !numero || !opciones || !filename || !pregunta) {
     return res.redirect("/app/ejercicios/reading");
   }
   const token = req.session?.token;
@@ -237,7 +240,7 @@ export const crearLeccionReading = async (req, res) => {
     const data1 = [
       filename,
       "reading",
-      [respuesta, opciones.join(":::")].join(":::"),
+      [pregunta, respuesta, opciones.join(":::")].join(":::"),
       numero,
       id,
     ];

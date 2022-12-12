@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Header } from "../components/AppModules";
+import { EditCuenta, Header } from "../components/AppModules";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import AuthContext from "../context/auth/AuthProvider";
 
@@ -60,7 +60,7 @@ const App = () => {
         />
         <Route path="/material/*" element={rol==="docente"?(<MaterialDoc/>):(<MaterialAlu/>)} />
         <Route path="/ejercicios/*" element={<Ejercicios />}></Route>
-        <Route path="/editar" element={<h2>DDDDDDDDDDDDDD</h2>} />
+        <Route path="/editar" element={<EditCuenta/>} />
         {rol === "docente" ? (
           <Route
             path="/actividades"

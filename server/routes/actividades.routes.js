@@ -8,7 +8,9 @@ import {
   createReadingActivity,
   createWritingActivity,
   getWritingActivity,
-  getActividades
+  getActividades,
+  setCalificacion,
+  deleteActivity
 } from "../controllers/actividades.controller.js";
 import multer from "../multer.js";
 
@@ -27,5 +29,7 @@ router.post("/createWritingActivity", multer, createWritingActivity);
 router.get("/getWritingActivity", getWritingActivity);
 
 router.get("/getActividades/:id", getActividades)
+router.delete("/deleteActivity/:id", deleteActivity)
+router.post("/setCalificacion", setCalificacion)
 
 export default router;

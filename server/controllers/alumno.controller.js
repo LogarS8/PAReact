@@ -209,29 +209,29 @@ export const getReadingAlu = async (req, res) => {
       );
       if (rows2.length > 0) {
         const [rows3] = await pool.query(
-          "select * from lecciones where idUsu = ? and tipoLec = 'writing';",
+          "select * from lecciones where idUsu = ? and tipoLec = 'reading';",
           [rows2[0].idUsu]
         );
         if (rows3.length > 0) {
-          res.json({
+          return res.json({
             message: "lecturas obtenidas",
             status: 200,
             data: rows3,
           });
         } else {
-          res.json({
+          return res.json({
             message: "No se han encontrado lecturas",
             status: 400,
           });
         }
       } else {
-        res.json({
+        return res.json({
           message: "No se han encontrado lecturas",
           status: 400,
         });
       }
     } else {
-      res.json({
+      return res.json({
         message: "No tienes lecturas",
         status: 400,
       });

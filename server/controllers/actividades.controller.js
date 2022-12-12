@@ -2,6 +2,10 @@ import { pool } from "../DB/pool.js";
 import { NODE_ENV, SECRET_KEY } from "../config.js";
 import jwt from "jsonwebtoken";
 
+import { __public } from "../app.js";
+import { unlink } from "fs/promises";
+import { join } from "path";
+
 export const createTestActivity = async (req, res) => {
   const { numero, preguntaAbierta, siono } = req.body;
   if (!numero) {
@@ -140,9 +144,8 @@ export const getWritingActivity = async (req, res) => {
   return res.json({ message: "ok", status: 200, data: rows });
 };
 export const getActividades = async (req, res) => {
-  const {id} = req.params;
-  console.log(id);
-  if (id) {
+  if (req.params.id !== "undefined") {
+    const { id } = req.params;
     console.log("aqui no deberia entrar");
     const token = req.session?.token;
     if (!token) {
@@ -156,8 +159,8 @@ export const getActividades = async (req, res) => {
       return res.json({ message: "no hay actividades", status: 400 });
     }
     return res.json({ message: "ok", status: 200, data: rows });
-  }else{
-    console.log("deberia entrar")
+  } else {
+    console.log("deberia entrar");
     const token = req.session?.token;
     if (!token) {
       return res.json({ message: "no estas logueado", status: 401 });
@@ -167,10 +170,75 @@ export const getActividades = async (req, res) => {
       "select * from actividades where idUsu = ?;",
       [idU]
     );
-    console.log(rows)
+    console.log(rows);
     if (rows.length === 0) {
       return res.json({ message: "no hay actividades", status: 400 });
     }
     return res.json({ message: "ok", status: 200, data: rows });
   }
+};
+export const setCalificacion = async (req, res) => {
+  const { idAct, calificacion } = req.body;
+  console.log(req.body);
+  if (isNaN(calificacion)) {
+    return res.json({ message: "calificacion no es un numero", status: 400 });
+  }
+  if (!idAct || !calificacion) {
+    return res.json({ message: "faltan datos", status: 400 });
+  }
+  const token = req.session?.token;
+  if (!token) {
+    return res.json({ message: "no estas logueado", status: 401 });
+  }
+  const { id } = jwt.verify(token, SECRET_KEY);
+  const [rows] = await pool.query(
+    "update actividades set califAct = ? where idAct = ?;",
+    [calificacion, idAct]
+  );
+  if (rows.length === 0) {
+    return res.json({ message: "no se pudo calificar", status: 400 });
+  }
+  return res.json({ message: "ok", status: 200 });
+};
+export const deleteActivity = async (req, res) => {
+  const { id: idAct } = req.params;
+  if (!idAct) {
+    return res.json({ message: "faltan datos", status: 400 });
+  }
+  const token = req.session?.token;
+  if (!token) {
+    return res.json({ message: "no estas logueado", status: 401 });
+  }
+  const { id } = jwt.verify(token, SECRET_KEY);
+  const [resp] = await pool.query("select * from actividades where idAct = ?", [
+    idAct,
+  ]);
+  if (resp.length === 0) {
+    return res.json({
+      message: "no se pudo eliminar la actividad",
+      status: 400,
+    });
+  }
+  if (resp[0].respuestaAct.endsWith(".pdf")) {
+    unlink(join(__public, `public/uploads/${resp[0].respuestaAct}`), (err) =>
+      console.log(err)
+    )
+      .then(() => {
+        console.log("Archivo eliminado");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  const [rows] = await pool.query("delete from actividades where idAct = ?;", [
+    idAct,
+  ]);
+
+  if (rows.length === 0) {
+    return res.json({
+      message: "no se pudo eliminar la actividad",
+      status: 400,
+    });
+  }
+  return res.json({ message: "ok", status: 200 });
 };

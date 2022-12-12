@@ -102,6 +102,14 @@ export const userAPI = {
     });
     return res;
   },
+  editarCuenta: async (data) => {
+    const res = await apiEndPoint.post(`users/editarCuenta`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res;
+  },
   getMateriales: async () => {
     const res = await apiEndPoint.get(`materiales/getMateriales`);
     return res;
@@ -150,12 +158,20 @@ export const userAPI = {
     const res = await apiEndPoint.get(`actividades/getWritingActivity`);
     return res;
   },
-  getAlumnos: async ()=>{
+  getAlumnos: async () => {
     const res = await apiEndPoint.get(`utils/docente/getAlumnos`);
     return res;
   },
-  getActividades: async (id) =>{
+  getActividades: async (id) => {
     const res = await apiEndPoint.get(`actividades/getActividades/${id}`);
     return res;
-  }
+  },
+  setCalificacion: async (data) => {
+    const res = await apiEndPoint.post(`actividades/setCalificacion`, data);
+    return res;
+  },
+  deleteActivity: async (id) => {
+    const res = await apiEndPoint.delete(`actividades/deleteActivity/${id}`);
+    return res;
+  },
 };

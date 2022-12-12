@@ -15,10 +15,10 @@ const MaterialDoc = () => {
   useEffect(() => {
     async function fetchData() {
       const res = await api.getMateriales();
-      if(res.data.status===200){
+      if (res.data.status === 200) {
         setMateriales(res.data.data);
-      }else{
-        setMateriales([])
+      } else {
+        setMateriales([]);
       }
     }
     fetchData();
@@ -152,78 +152,236 @@ const FormMaterial = () => {
   const nav = useNavigate();
   return (
     <div>
-      <div className="container">
-        <h3>Crear nuevo material</h3>
-        <div className="row">
-          <div className="col-md-">
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                const form = e.target;
-                const data = new FormData(form);
+      <div className="row m-2 p-2 g-2">
+        <div className="col-md-4  m-auto">
+          <div className="container">
+            <h3>Crear nuevo material</h3>
+            <div className="row">
+              <div className="col-md-9">
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const data = new FormData(form);
 
-                const res = await api.createMaterial(data);
-                console.log(res);
-                if (res.data.status === 200) {
-                  MySwal.fire({
-                    title: "Material creado",
-                    icon: "success",
-                    confirmButtonText: "Ok",
-                    text: res.data.message,
-                    timer: 2000,
-                  }).then(() => {
-                    nav("/app/material");
-                  });
-                } else {
-                  MySwal.fire({
-                    title: "Error",
-                    icon: "error",
-                    confirmButtonText: "Ok",
-                    text: res.data.message,
-                    timer: 2000,
-                  });
-                }
-              }}
-            >
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">
-                  Nombre del material
-                </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  name="nombre"
-                />
+                    const res = await api.createMaterial(data);
+                    console.log(res);
+                    if (res.data.status === 200) {
+                      MySwal.fire({
+                        title: "Material creado",
+                        icon: "success",
+                        confirmButtonText: "Ok",
+                        text: res.data.message,
+                        timer: 2000,
+                      }).then(() => {
+                        nav("/app/material");
+                      });
+                    } else {
+                      MySwal.fire({
+                        title: "Error",
+                        icon: "error",
+                        confirmButtonText: "Ok",
+                        text: res.data.message,
+                        timer: 2000,
+                      });
+                    }
+                  }}
+                >
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">
+                      Nombre del material
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleFormControlInput1"
+                      name="nombre"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">
+                      Texto del material
+                    </label>
+                    <textarea
+                      class="form-control"
+                      id="exampleFormControlTextarea1"
+                      rows="5"
+                      name="texto"
+                    ></textarea>
+                  </div>
+                  <div className="mb-3">
+                    <label for="formFile" class="form-label">
+                      Subir material (PDF) (opcional)
+                    </label>
+                    <input
+                      class="form-control"
+                      type="file"
+                      id="formFile"
+                      name="fileImg"
+                    />
+                  </div>
+                  <div className="d-grid gap-2 col-3">
+                    <button className="btn btn-primary" type="submit">
+                      Crear material
+                    </button>
+                  </div>
+                </form>
               </div>
-              <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">
-                  Texto del material
-                </label>
-                <textarea
-                  class="form-control"
-                  id="exampleFormControlTextarea1"
-                  rows="5"
-                  name="texto"
-                ></textarea>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4  m-auto">
+          <div className="container">
+            <h3>Crear nuevo material</h3>
+            <div className="row">
+              <div className="col-md-9">
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const data = new FormData(form);
+
+                    const res = await api.createMaterial(data);
+                    console.log(res);
+                    if (res.data.status === 200) {
+                      MySwal.fire({
+                        title: "Material creado",
+                        icon: "success",
+                        confirmButtonText: "Ok",
+                        text: res.data.message,
+                        timer: 2000,
+                      }).then(() => {
+                        nav("/app/material");
+                      });
+                    } else {
+                      MySwal.fire({
+                        title: "Error",
+                        icon: "error",
+                        confirmButtonText: "Ok",
+                        text: res.data.message,
+                        timer: 2000,
+                      });
+                    }
+                  }}
+                >
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">
+                      Nombre del material
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleFormControlInput1"
+                      name="nombre"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">
+                      Texto del material
+                    </label>
+                    <textarea
+                      class="form-control"
+                      id="exampleFormControlTextarea1"
+                      rows="5"
+                      name="texto"
+                    ></textarea>
+                  </div>
+                  <div className="mb-3">
+                    <label for="formFile" class="form-label">
+                      Subir material (PDF) (opcional)
+                    </label>
+                    <input
+                      class="form-control"
+                      type="file"
+                      id="formFile"
+                      name="fileImg"
+                    />
+                  </div>
+                  <div className="d-grid gap-2 col-3">
+                    <button className="btn btn-primary" type="submit">
+                      Crear material
+                    </button>
+                  </div>
+                </form>
               </div>
-              <div className="mb-3">
-                <label for="formFile" class="form-label">
-                  Subir material (PDF) (opcional)
-                </label>
-                <input
-                  class="form-control"
-                  type="file"
-                  id="formFile"
-                  name="fileImg"
-                />
+            </div>
+          </div>
+        </div>
+        <div className="col-md-4 m-auto">
+          <div className="container">
+            <h3>Crear nuevo material</h3>
+            <div className="row">
+              <div className="col-md-9">
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const data = new FormData(form);
+
+                    const res = await api.createMaterial(data);
+                    console.log(res);
+                    if (res.data.status === 200) {
+                      MySwal.fire({
+                        title: "Material creado",
+                        icon: "success",
+                        confirmButtonText: "Ok",
+                        text: res.data.message,
+                        timer: 2000,
+                      }).then(() => {
+                        nav("/app/material");
+                      });
+                    } else {
+                      MySwal.fire({
+                        title: "Error",
+                        icon: "error",
+                        confirmButtonText: "Ok",
+                        text: res.data.message,
+                        timer: 2000,
+                      });
+                    }
+                  }}
+                >
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">
+                      Nombre del material
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleFormControlInput1"
+                      name="nombre"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">
+                      Texto del material
+                    </label>
+                    <textarea
+                      class="form-control"
+                      id="exampleFormControlTextarea1"
+                      rows="5"
+                      name="texto"
+                    ></textarea>
+                  </div>
+                  <div className="mb-3">
+                    <label for="formFile" class="form-label">
+                      Subir material (PDF) (opcional)
+                    </label>
+                    <input
+                      class="form-control"
+                      type="file"
+                      id="formFile"
+                      name="fileImg"
+                    />
+                  </div>
+                  <div className="d-grid gap-2 col-3">
+                    <button className="btn btn-primary" type="submit">
+                      Crear material
+                    </button>
+                  </div>
+                </form>
               </div>
-              <div className="d-grid gap-2 col-3">
-                <button className="btn btn-primary" type="submit">
-                  Crear material
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -232,8 +390,7 @@ const FormMaterial = () => {
 };
 
 const MaterialRoutes = () => {
-
-  const {code} = useContext(AuthContext)
+  const { code } = useContext(AuthContext);
 
   const nav = useNavigate();
 
@@ -242,7 +399,6 @@ const MaterialRoutes = () => {
       nav("/app");
     }
   }, [code]);
-
 
   return (
     <>

@@ -116,8 +116,11 @@ const ReadingAlu = () => {
                                 name="numeroLec"
                                 value={ejercicio[1].numeroLec}
                               />
+                              <h5>
+                                {ejercicio[1].respuestaLec?.split(":::")[0]}
+                              </h5>
                               {numbers.map((number, index) => {
-                                const [respuesta, ...rest] =
+                                const [pregunta, respuesta, ...rest] =
                                   ejercicio[1]?.respuestaLec?.split(":::");
                                 if (rest[index]) {
                                   return (

@@ -2,6 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userAPI as api } from "../../API/userAPI";
 import AuthContext from "../../context/auth/AuthProvider";
+import Swal from "sweetalert2";
+import withreactcontent from "sweetalert2-react-content";
+
+const MySwal = withreactcontent(Swal);
 
 const ActividadesDoc = () => {
   const { code } = useContext(AuthContext);
@@ -129,7 +133,9 @@ const ActividadesDoc = () => {
                                       >
                                         <span style={{ fontSize: 14 }}>
                                           Respuesta del alumno:{" "}
-                                          {actividad?.respuestaAct.endsWith(".pdf") ? (
+                                          {actividad?.respuestaAct.endsWith(
+                                            ".pdf"
+                                          ) ? (
                                             <a
                                               href={`../public/uploads/${actividad?.respuestaAct}`}
                                             >
@@ -141,7 +147,9 @@ const ActividadesDoc = () => {
                                                 }}
                                               ></i>
                                             </a>
-                                          ):actividad?.respuestaAct}
+                                          ) : (
+                                            actividad?.respuestaAct
+                                          )}
                                         </span>
                                         <span
                                           style={{
@@ -150,7 +158,7 @@ const ActividadesDoc = () => {
                                             color: "var(--bs-gray-600)",
                                           }}
                                         >
-                                          0/10
+                                          {actividad?.califAct}/10
                                         </span>
                                       </div>
                                     </div>
@@ -160,9 +168,80 @@ const ActividadesDoc = () => {
                                         data-bs-toggle="tooltip"
                                         data-bss-tooltip=""
                                         style={{
-                                          color: "var(--bs-yellow)",
+                                          color:
+                                            actividad?.califAct >= 9
+                                              ? "var(--bs-blue)"
+                                              : actividad?.califAct >= 7
+                                              ? "var(--bs-green)"
+                                              : actividad?.califAct >= 5
+                                              ? "var(--bs-yellow)"
+                                              : actividad?.califAct >= 3
+                                              ? "var(--bs-orange)"
+                                              : actividad?.califAct >= 1
+                                              ? "var(--bs-red)"
+                                              : "var(--bs-gray-600)",
                                           fontSize: 28,
                                           marginTop: 4,
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          MySwal.fire({
+                                            title:
+                                              "Introduzca la calificación de 0 a 10",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Enviar",
+                                            cancelButtonText: "Cancelar",
+                                            input: "text",
+                                            inputPlaceholder: "0/10",
+                                            inputAttributes: {
+                                              autocapitalize: "off",
+                                              min: 0,
+                                              max: 10,
+                                            },
+                                          }).then(async (res) => {
+                                            if (res.value > 10 || res.value < 0)
+                                              return MySwal.fire(
+                                                "Error",
+                                                "La calificación debe ser entre 0 y 10",
+                                                "error"
+                                              );
+                                            if (!res.value)
+                                              return MySwal.fire(
+                                                "Error",
+                                                "Debe introducir una calificación",
+                                                "error"
+                                              );
+                                            if (isNaN(res.value))
+                                              return MySwal.fire(
+                                                "Error",
+                                                "La calificación debe ser un número",
+                                                "error"
+                                              );
+                                            const { value } = res;
+                                            const response =
+                                              await api.setCalificacion({
+                                                idAct: actividad.idAct,
+                                                calificacion: value,
+                                              });
+                                            if (response.status === 200) {
+                                              MySwal.fire(
+                                                "Éxito",
+                                                "Calificación asignada",
+                                                "success"
+                                              );
+                                              const res =
+                                                await api.getActividades(
+                                                  selected
+                                                );
+                                              setActividades(res.data.data);
+                                            } else {
+                                              MySwal.fire(
+                                                "Error",
+                                                "Ocurrió un error",
+                                                "error"
+                                              );
+                                            }
+                                          });
                                         }}
                                         title="Asignar medalla"
                                       ></i>

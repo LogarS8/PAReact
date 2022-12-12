@@ -143,6 +143,7 @@ const IndexBody = () => {
                       <th className="text-center">Respuesta</th>
                       <th className="text-center">Estado</th>
                       <th className="text-center">TIPO</th>
+                      <th className="text-center">Calificación</th>
                       <th className="text-center filter-false sorter-false">
                         Acciones
                       </th>
@@ -151,7 +152,7 @@ const IndexBody = () => {
                   <tbody className="text-center">
                     {actividades.length === 0 ? (
                       <tr>
-                        <td colSpan={4}>No hay actividades</td>
+                        <td colSpan={5}>No hay actividades</td>
                       </tr>
                     ) : (
                       actividades.map((actividad, index) => (
@@ -177,33 +178,13 @@ const IndexBody = () => {
                               <i className="fas fa-check text-info"></i>
                             </p>
                           </td>
-                          <td>Writing</td>
+                          <td>{actividad.tipoAct}</td>
+                          <td>{actividad.califAct}/10</td>
                           <td
                             className="text-center align-middle"
                             style={{ maxHeight: 60, height: 60 }}
                           >
-                            <a
-                              className="btn btnMaterial btn-flat primary semicircle"
-                              role="button"
-                              data-bs-toggle="tooltip"
-                              data-bss-tooltip=""
-                              href="show.html"
-                              title="Ver detalles"
-                            >
-                              <i className="far fa-eye"></i>
-                            </a>
-                            <a
-                              className="btn btnMaterial btn-flat success semicircle"
-                              role="button"
-                              href="create-document.html"
-                            >
-                              <i
-                                className="fas fa-pen"
-                                data-bs-toggle="tooltip"
-                                data-bss-tooltip=""
-                                title="Editar"
-                              ></i>
-                            </a>
+                          
                             <a
                               className="btn btnMaterial btn-flat accent btnNoBorders checkboxHover"
                               role="button"
@@ -211,8 +192,37 @@ const IndexBody = () => {
                               data-bss-tooltip=""
                               style={{ marginLeft: 5 }}
                               data-bs-target="#delete-modal"
-                              href="#"
                               title="Eliminar"
+                              onClick={(e)=>{
+                                e.preventDefault();
+                                MySwal.fire({
+                                  title: "Eliminar actividad",
+                                  text: "¿Estas seguro de eliminar esta actividad?",
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonText: "Eliminar",
+                                  cancelButtonText: "Cancelar",
+                                  
+                                }).then(async result => {
+                                  if(result.isConfirmed){
+                                    console.log(actividad.idAct)
+                                    const res = await api.deleteActivity(actividad.idAct);
+                                    if(res.data.status === 200){
+                                      MySwal.fire({
+                                        title: "Actividad eliminada",
+                                        icon: "success",
+                                      });
+                                      setActividades(actividades.filter((act) => act.idAct !== actividad.idAct));
+                                    }else{
+                                      MySwal.fire({
+                                        title: "Error",
+                                        text: res.data.message,
+                                        icon: "error",
+                                      });
+                                    }
+                                  }
+                                })
+                              }}
                             >
                               <i
                                 className="fas fa-trash btnNoBorders"

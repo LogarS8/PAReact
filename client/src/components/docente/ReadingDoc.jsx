@@ -92,11 +92,15 @@ const ReadingDoc = () => {
                             className="card-img-top"
                             alt="..."
                           />
+
                           <div className="card-body">
+                            <h5 className="card-title">
+                              {ejercicio[1].respuestaLec?.split(":::")[0]}
+                            </h5>
                             {numbers.map((number, index) => {
-                              const [respuesta, ...rest] =
+                              const [pregunta, respuesta, ...rest] =
                                 ejercicio[1]?.respuestaLec?.split(":::");
-                              const bool = (respuesta - 1) === index;
+                              const bool = respuesta - 1 === index;
                               if (rest[index]) {
                                 return (
                                   <div className="form-check" key={index}>
@@ -178,6 +182,18 @@ const ReadingDoc = () => {
                               id={`formFileSm-${ejercicio[0]}`}
                               type="file"
                               name="fileImg"
+                            />
+                          </div>
+                          <div className="mb-3">
+                            <label htmlFor="pregunta" className="form-label">
+                              Escribe la pregunta
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="pregunta"
+                              name="pregunta"
+                              placeholder="Escribe la pregunta"
                             />
                           </div>
                           <select

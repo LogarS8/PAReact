@@ -2,6 +2,9 @@ import { pool } from "../DB/pool.js";
 import { NODE_ENV, SECRET_KEY } from "../config.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { __public } from "../app.js";
+import { unlink } from "fs/promises";
+import { join } from "path";
 
 export const getUsers = async (req, res) => {
   // const [rows] = await pool.query("SELECT * FROM usuarios");
@@ -179,4 +182,68 @@ export const logoutUser = async (req, res) => {
   } else {
     return res.json({ message: "No hay usuario logueado", status: 400 });
   }
+};
+export const editarCuenta = async (req, res) => {
+  const token = req.session.token;
+  const { id } = jwt.verify(token, SECRET_KEY);
+  const { firstname, lastname, email, password, confirmpass } = req.body;
+  if (!firstname || !lastname || !email || !password || !confirmpass) {
+    console.log(req.body);
+    return res.json({
+      message: "Todos los campos son obligatorios",
+      status: 400,
+    });
+  }
+  if (password !== confirmpass) {
+    return res.json({ message: "Las contraseñas no coinciden", status: 400 });
+  }
+
+  const [row1] = await pool.query("select * from usuarios where idUsu = ?", [
+    id,
+  ]);
+
+  if (row1[0].correoUsu !== email) {
+    const [rows] = await pool.query(
+      "SELECT * FROM usuarios WHERE correoUsu = ?",
+      [email]
+    );
+    if (rows.length > 0) {
+      return res.json({ message: "El correo ya está registrado", status: 400 });
+    }
+  }
+
+  const encryptedPassword = await bcrypt.hash(password, 10);
+  const [result] = await pool.query(
+    "UPDATE usuarios SET nombreUsu = ?, apellidosUsu = ?, correoUsu = ?, contraseñaUsu = ?, imgurlUsu = ? WHERE idUsu = ?",
+    [firstname, lastname, email, encryptedPassword, req.file?.filename, id]
+  );
+
+  if (result.affectedRows > 0) {
+    unlink(join(__public, `public/uploads/${row1[0].imgurlUsu}`), (err) =>
+      console.log(err)
+    )
+      .then(() => {
+        console.log("Archivo eliminado");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return res.json({
+      message: "Cuenta editada",
+      status: 200,
+      user: {
+        firstName: firstname,
+        lastName: lastname,
+        email,
+        image: req.file?.filename,
+        rol: row1[0].rolUsu,
+      },
+    });
+  } else {
+    return res.json({
+      message: "Error al editar la cuenta, por favor intente mas tarde",
+      status: 400,
+    });
+  }
+  return res.json({ message: "Cuenta editada", status: 200 });
 };

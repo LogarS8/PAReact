@@ -119,3 +119,132 @@ export const Header = ({ rol }) => {
     </header>
   );
 };
+
+export const EditCuenta = () => {
+  const nav = useNavigate();
+  const { user, setUser } = useContext(AuthContext);
+
+  return (
+    <div className="container my-5 py-5">
+      <div className="row">
+        <div className="col-md-12">
+          <div className="card">
+            <div className="card-header">
+              <h4 className="card-title">Editar cuenta</h4>
+            </div>
+            <div className="card-body">
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const info = new FormData(e.target);
+                  console.log(info)
+                  const res = await api.editarCuenta(info);
+                  console.log(res)
+                  if (res.data.status === 200) {
+                    MySwal.fire({
+                      icon: "success",
+                      title: "Cuenta editada correctamente",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    }).then(()=>{
+                      setUser(res.data.user);
+                      nav("/app");
+                    })
+                  } else {
+                    MySwal.fire({
+                      icon: "error",
+                      title: "Error al editar cuenta",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  }
+                }}
+              >
+                <div className="row">
+                  <div className="col-md-6 pr-1">
+                    <div className="form-group">
+                      <label>Nombre</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Nombre"
+                        name="firstname"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6 pl-1">
+                    <div className="form-group">
+                      <label>Apellido</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Apellido"
+                        name="lastname"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 pr-1">
+                    <div className="form-group">
+                      <label>Email</label>
+                      <input
+                        type="email"
+                        className="form-control"
+                        placeholder="Email"
+                        name="email"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6 pl-1">
+                    <div className="form-group">
+                      <label>Contraseña</label>
+                      <input
+                        type="password"
+                        className="form-control"
+                        placeholder="Contraseña"
+                        name="password"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 pr-1">
+                    <div className="form-group">
+                      <label>Confirmar contraseña</label>
+                      <input
+                        type="password"
+                        className="form-control"
+                        placeholder="Confirmar contraseña"
+                        name="confirmpass"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6 pr-1">
+                    <div className="form-group">
+                      <label>Foto de perfil</label>
+                      <input
+                        type="file"
+                        className="form-control"
+                        placeholder="Foto de perfil"
+                        name="fileImg"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-info btn-fill pull-right"
+                >
+                  Editar
+                </button>
+                <div className="clearfix"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

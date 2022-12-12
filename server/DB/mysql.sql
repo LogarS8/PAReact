@@ -32,10 +32,14 @@ CREATE TABLE `actividades` (
   `tipoAct` varchar(100) NOT NULL,
   `respuestaAct` varchar(100) NOT NULL,
   `numeroAct` int NOT NULL,
+  `califAct` int null,
   `idUsu` int NOT NULL,
   PRIMARY KEY (`idAct`),
   KEY `idUsu_idx` (`idUsu`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
+/*Edit table actividades to add a column called califAct*/
+
 
 CREATE TABLE `codigos` (
   `idCodi` int NOT NULL AUTO_INCREMENT,
