@@ -12,7 +12,7 @@ export const getDocentes = async (req, res) => {
     "SELECT * FROM usuarios where rolUsu = 'docente'"
   );
   if (rows.length === 0)
-    return res.status(404).json({ message: "No hay docentes registrados" });
+    return res.status(400).json({ message: "No hay docentes registrados" });
   return res.json({
     message: "Docentes encontrados",
     status: 200,

@@ -11,6 +11,7 @@ import ActividadesDoc from "../components/docente/ActividadesDoc";
 import MaterialDoc from "../components/docente/MaterialDoc";
 import MaterialAlu from "../components/alumno/MaterialAlu";
 import Panel from "../components/admin/Panel";
+import NotFound from "./NotFound";
 
 const App = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -70,7 +71,7 @@ const App = () => {
         {rol === "docente" ? (
           <Route path="/actividades" element={<ActividadesDoc />} />
         ) : null}
-        <Route path="*" element={<h1>404</h1>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
