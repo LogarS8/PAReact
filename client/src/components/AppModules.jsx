@@ -137,19 +137,19 @@ export const EditCuenta = () => {
                 onSubmit={async (e) => {
                   e.preventDefault();
                   const info = new FormData(e.target);
-                  console.log(info)
+                  console.log(info);
                   const res = await api.editarCuenta(info);
-                  console.log(res)
+                  console.log(res);
                   if (res.data.status === 200) {
                     MySwal.fire({
                       icon: "success",
                       title: "Cuenta editada correctamente",
                       showConfirmButton: false,
                       timer: 1500,
-                    }).then(()=>{
+                    }).then(() => {
                       setUser(res.data.user);
                       nav("/app");
-                    })
+                    });
                   } else {
                     MySwal.fire({
                       icon: "error",
@@ -169,6 +169,9 @@ export const EditCuenta = () => {
                         className="form-control"
                         placeholder="Nombre"
                         name="firstname"
+                        minLength="5"
+                        maxLength="30"
+                        required
                       />
                     </div>
                   </div>
@@ -180,6 +183,9 @@ export const EditCuenta = () => {
                         className="form-control"
                         placeholder="Apellido"
                         name="lastname"
+                        minLength="5"
+                        maxLength="30"
+                        required
                       />
                     </div>
                   </div>
@@ -193,6 +199,10 @@ export const EditCuenta = () => {
                         className="form-control"
                         placeholder="Email"
                         name="email"
+                        autoComplete="on"
+                        minLength="10"
+                        maxLength="35"
+                        required
                       />
                     </div>
                   </div>
@@ -204,6 +214,9 @@ export const EditCuenta = () => {
                         className="form-control"
                         placeholder="Contraseña"
                         name="password"
+                        required
+                        minLength={10}
+                        maxLength={20}
                       />
                     </div>
                   </div>
@@ -217,6 +230,9 @@ export const EditCuenta = () => {
                         className="form-control"
                         placeholder="Confirmar contraseña"
                         name="confirmpass"
+                        required
+                        minLength={10}
+                        maxLength={20}
                       />
                     </div>
                   </div>
@@ -228,6 +244,8 @@ export const EditCuenta = () => {
                         className="form-control"
                         placeholder="Foto de perfil"
                         name="fileImg"
+                        required
+                        accept="image/jpeg, image/png"
                       />
                     </div>
                   </div>

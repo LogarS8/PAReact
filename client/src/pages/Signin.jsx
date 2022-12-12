@@ -9,19 +9,18 @@ import AuthContext from "../context/auth/AuthProvider";
 const MySwal = withReactContent(Swal);
 
 const Signin = () => {
-
-  const {user: userC} = useContext(AuthContext);
+  const { user: userC } = useContext(AuthContext);
 
   const nav = useNavigate();
 
   const [image, setImage] = useState(undefined);
   const [preview, setPreview] = useState(undefined);
 
-  useEffect(()=>{
-    if(userC){
-      nav('/app');
+  useEffect(() => {
+    if (userC) {
+      nav("/app");
     }
-  }, [userC])
+  }, [userC]);
 
   const [user, setUser] = useState({
     firstName: "",
@@ -91,34 +90,37 @@ const Signin = () => {
             e.preventDefault();
 
             if (validate(user)) {
-
               const formData = new FormData(e.target);
 
               const res = await userAPI.register(formData);
               if (res.data.status === 200) {
                 MySwal.fire({
                   html: 'Por favor acepte nuestros <a src="Signin">terminos y condiciones</a>',
-                  confirmButtonText : 'Acepto',
-                  icon: 'info',
-                  padding: '1 rem',
+                  confirmButtonText: "Acepto",
+                  icon: "info",
+                  padding: "1 rem",
                   backdrop: true,
                   toast: true,
-                  position: 'bottom',
+                  position: "bottom",
                   allowOutsideClick: false,
                   allowEscapeKey: false,
                   stopKeydownPropagation: false,
                   showConfirmButton: true,
                   showCancelButton: false,
                   showCloseButton: false,
-                  closeButtonAriaLabel: 'Cerrar esta alerta',
-                }).then(()=>{MySwal.fire({
-                  title: "Registro exitoso",
-                  text: res.data.message,
-                  icon: "success",
-                  confirmButtonText: "Ok",
-                })}).then(() => {
-                  nav("/login");
-                });
+                  closeButtonAriaLabel: "Cerrar esta alerta",
+                })
+                  .then(() => {
+                    MySwal.fire({
+                      title: "Registro exitoso",
+                      text: res.data.message,
+                      icon: "success",
+                      confirmButtonText: "Ok",
+                    });
+                  })
+                  .then(() => {
+                    nav("/login");
+                  });
               } else {
                 MySwal.fire({
                   title: "Error :(",
