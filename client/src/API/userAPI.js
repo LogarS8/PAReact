@@ -2,7 +2,7 @@ import axios from "axios";
 export const apiEndPoint = axios.create({
   // https://breakandlearn.up.railway.app/
   // http://localhost:3000/
-  baseURL: "https://breakandlearn.up.railway.app/api/v1",
+  baseURL: "http://localhost:3000/api/v1",
 });
 
 export const userAPI = {
@@ -174,4 +174,28 @@ export const userAPI = {
     const res = await apiEndPoint.delete(`actividades/deleteActivity/${id}`);
     return res;
   },
+  getDocentes: async () => {
+    const res = await apiEndPoint.get(`utils/admin/`);
+    return res;
+  },
+  deleteDocente: async (id) => {
+    const res = await apiEndPoint.delete(`utils/admin/${id}`);
+    return res;
+  },
+  createDocente: async (data) => {
+    const res = await apiEndPoint.post(`utils/admin/`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res;
+  },
+  updateDocente: async (data) => {
+    const res = await apiEndPoint.post(`utils/admin/`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res;
+  }
 };

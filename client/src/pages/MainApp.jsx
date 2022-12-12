@@ -10,6 +10,7 @@ import Ejercicios from "../components/Ejercicios";
 import ActividadesDoc from "../components/docente/ActividadesDoc";
 import MaterialDoc from "../components/docente/MaterialDoc";
 import MaterialAlu from "../components/alumno/MaterialAlu";
+import Panel from "../components/admin/Panel";
 
 const App = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -44,28 +45,30 @@ const App = () => {
 
   return (
     <>
-      <Header rol={rol} />
+      {rol !== "admin" ? <Header /> : null}
       <br />
       <br />
       <Routes>
         <Route
           path="/"
           element={
-            rol === "docente" ? (
+            rol === "admin" ? (
+              <Panel />
+            ) : rol === "docente" ? (
               <IndexBodyDoc />
-            ) : (
+            ) : rol === "alumno" ? (
               <IndexBodyAlu />
-            )
+            ) : null
           }
         />
-        <Route path="/material/*" element={rol==="docente"?(<MaterialDoc/>):(<MaterialAlu/>)} />
+        <Route
+          path="/material/*"
+          element={rol === "docente" ? <MaterialDoc /> : <MaterialAlu />}
+        />
         <Route path="/ejercicios/*" element={<Ejercicios />}></Route>
-        <Route path="/editar" element={<EditCuenta/>} />
+        <Route path="/editar" element={<EditCuenta />} />
         {rol === "docente" ? (
-          <Route
-            path="/actividades"
-            element={<ActividadesDoc/>}
-          />
+          <Route path="/actividades" element={<ActividadesDoc />} />
         ) : null}
         <Route path="*" element={<h1>404</h1>} />
       </Routes>

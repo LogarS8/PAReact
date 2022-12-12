@@ -20,6 +20,7 @@ import leccionesRoutes from "./routes/lecciones.routes.js";
 import testRoutes from "./routes/test.routes.js";
 import materialesRoutes from "./routes/materiales.routes.js";
 import actividadesRoutes from "./routes/actividades.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import { authUserLogin, userCanAccess } from "./middleware/auth.mid.js";
 
 //dirname
@@ -73,6 +74,7 @@ app.use("/api/v1/lecciones", leccionesRoutes)
 app.use("/api/v1/test", testRoutes)
 app.use("/api/v1/materiales", materialesRoutes)
 app.use("/api/v1/actividades", actividadesRoutes)
+app.use("/api/v1/utils/admin", adminRoutes)
 
 
 //server

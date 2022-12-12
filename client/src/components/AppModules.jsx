@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../context/auth/AuthProvider";
-import { userAPI as api } from "../API/userAPI";
+import { apiEndPoint, userAPI as api, userAPI } from "../API/userAPI";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -123,6 +123,32 @@ export const Header = ({ rol }) => {
 export const EditCuenta = () => {
   const nav = useNavigate();
   const { user, setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await userAPI.checkSession();
+        console.log(res);
+        if (res.data.status === 200) {
+          setUser(res.data.user);
+        } else {
+          nav("/login", {
+            state: {
+              message: "Debes iniciar sesion para acceder a esta pagina",
+            },
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    if (user) {
+      fetchData();
+    }
+    if (user.rol === "admin") {
+      nav("/app");
+    }
+  }, []);
 
   return (
     <div className="container my-5 py-5">
