@@ -142,13 +142,19 @@ export const EditCuenta = () => {
         console.log(err);
       }
     }
-    if (user) {
+    if (!user) {
       fetchData();
     }
-    if (user.rol === "admin") {
+  }, []);
+
+  useEffect(() => {
+    console.log("--------------------");
+    console.log(user);
+    console.log("--------------------");
+    if (user?.rol === "admin") {
       nav("/app");
     }
-  }, []);
+  }, [user]);
 
   return (
     <div className="container my-5 py-5">
