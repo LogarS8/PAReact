@@ -11,7 +11,7 @@ const router = Router();
 
 router.get("/", getDocentes);
 router.post("/", createDocente);
-router.delete("/:id", deleteDocente);
+router.post("/deleteDocente", deleteDocente);
 router.put("/:id", updateDocente);
 
 export default router;

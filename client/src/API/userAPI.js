@@ -178,8 +178,8 @@ export const userAPI = {
     const res = await apiEndPoint.get(`utils/admin/`);
     return res;
   },
-  deleteDocente: async (id) => {
-    const res = await apiEndPoint.delete(`utils/admin/${id}`);
+  deleteDocente: async (data) => {
+    const res = await apiEndPoint.post(`utils/admin/deleteDocente`, data);
     return res;
   },
   createDocente: async (data) => {

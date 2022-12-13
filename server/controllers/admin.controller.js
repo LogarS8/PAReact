@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { __public } from "../app.js";
 import { unlink } from "fs/promises";
 import { join } from "path";
+import bcrypt from "bcrypt";
 
 export const createDocente = async (req, res) => {};
 
@@ -20,6 +21,20 @@ export const getDocentes = async (req, res) => {
   });
 };
 
-export const deleteDocente = async (req, res) => {};
+export const deleteDocente = async (req, res) => {
+  console.log(req.body);
+  const { id, password } = req.body;
+  const [rows] = await pool.query("SELECT * FROM usuarios where idUsu = ?", [
+    id,
+  ]);
+  if (rows.length === 0)
+    return res.json({ message: "No hay docentes registrados", status: 400 });
+  const bool = await bcrypt.compare(password, rows[0].contraseñaUsu);
+  if (!bool) return res.json({ message: "Contraseña incorrecta", status: 400 });
+  const [del] = await pool.query("DELETE FROM usuarios where idUsu = ?", [id]);
+  if (del.affectedRows === 0)
+    return res.json({ message: "No se pudo eliminar el docente", status: 400 });
+  return res.json({ message: "Docente eliminado", status: 200 });
+};
 
 export const updateDocente = async (req, res) => {};
