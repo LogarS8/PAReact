@@ -8,7 +8,7 @@ import AuthContext from "../context/auth/AuthProvider";
 
 const MySwal = withReactContent(Swal);
 
-const Signin = () => {
+const Signin = ({ handleSubmit, docente }) => {
   const { user: userC } = useContext(AuthContext);
 
   const nav = useNavigate();
@@ -17,7 +17,7 @@ const Signin = () => {
   const [preview, setPreview] = useState(undefined);
 
   useEffect(() => {
-    if (userC) {
+    if (userC && !handleSubmit) {
       nav("/app");
     }
   }, [userC]);
@@ -77,12 +77,12 @@ const Signin = () => {
 
   return (
     <div>
-      <Header />
+      {!handleSubmit ? <Header /> : null}
 
       <div
         className="container-xl border rounded-0 border-1 border-dark profile profile-view"
         id="profile"
-        style={{ paddingTop: 0, marginTop: 48 }}
+        style={{ paddingTop: 0, marginTop: !handleSubmit ? 48 : 0 }}
       >
         <form
           encType="multipart/form-data"
@@ -149,6 +149,10 @@ const Signin = () => {
                   />
                 </div>
               </div>
+
+              {docente ? (
+                <input type="hidden" name="rol" value="docente" />
+              ) : null}
               <input
                 className="form-control form-control"
                 type="file"
@@ -292,29 +296,33 @@ const Signin = () => {
                 <button className="btn btn-primary form-btn" type="submit">
                   Registrarse
                 </button>
-                <button
-                  className="btn btn-danger form-btn"
-                  onClick={() => nav("/")}
-                >
-                  Cancelar
-                </button>
-                <div>
-                  ¿Ya tienes una cuenta?&nbsp;&nbsp;
-                  <Link
-                    className="btn btn-outline-primary form-btn"
-                    role="button"
-                    to="/login"
-                  >
-                    Ya la tengo!
-                  </Link>
-                </div>
+                {!handleSubmit ? (
+                  <>
+                    <button
+                      className="btn btn-danger form-btn"
+                      onClick={() => nav("/")}
+                    >
+                      Cancelar
+                    </button>
+                    <div>
+                      ¿Ya tienes una cuenta?&nbsp;&nbsp;
+                      <Link
+                        className="btn btn-outline-primary form-btn"
+                        role="button"
+                        to="/login"
+                      >
+                        Ya la tengo!
+                      </Link>
+                    </div>
+                  </>
+                ) : null}
               </div>
             </div>
           </div>
         </form>
       </div>
 
-      <Footer />
+      {!handleSubmit ? <Footer /> : null}
     </div>
   );
 };

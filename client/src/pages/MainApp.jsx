@@ -46,12 +46,12 @@ const App = () => {
 
   return (
     <>
-      {rol !== "admin" ? <Header /> : null}
+      {rol !== "admin" ? <Header rol={rol} /> : null}
       <br />
       <br />
       <Routes>
         <Route
-          path="/"
+          path={rol === "admin" ? "/*" : "/"}
           element={
             rol === "admin" ? (
               <Panel />

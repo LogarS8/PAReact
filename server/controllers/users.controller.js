@@ -11,7 +11,8 @@ export const getUsers = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-  const { firstname, lastname, email, password, confirmpass } = req.body;
+  console.log(req.body)
+  const { firstname, lastname, email, password, confirmpass, rol } = req.body;
 
   const image = req.file?.filename;
 
@@ -45,7 +46,14 @@ export const createUser = async (req, res) => {
   const [result] = await pool
     .query(
       "INSERT INTO usuarios(nombreUsu, apellidosUsu, correoUsu, contraseñaUsu, imgurlUsu, rolUsu) values (?, ?, ?, ?, ?, ?)",
-      [firstname, lastname, email, encryptedPassword, image, "alumno"]
+      [
+        firstname,
+        lastname,
+        email,
+        encryptedPassword,
+        image,
+        rol ? rol : "alumno",
+      ]
     )
     .catch((err) => {
       console.log(err);
@@ -167,7 +175,7 @@ export const checkSession = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   const { cookie_token } = req.cookies;
-  if (cookie_token) {
+  if (true) {
     req.session.destroy((err) => {
       if (!err) {
         res.clearCookie("cookie_token");

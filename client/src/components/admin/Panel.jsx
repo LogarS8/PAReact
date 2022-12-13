@@ -1,15 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
-import { userAPI as api } from "../../API/userAPI";
+import { userAPI as api, userAPI } from "../../API/userAPI";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import AuthContext from "../../context/auth/AuthProvider";
+import {
+  Link,
+  Route,
+  Routes,
+  useAsyncError,
+  useNavigate,
+} from "react-router-dom";
+import Signin from "../../pages/Signin";
 
 const MySwal = withReactContent(Swal);
 const Panel = () => {
-
-  const {user, setUser} = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [docentes, setDocentes] = useState([]);
 
+  const nav = useNavigate();
   useEffect(() => {
     (async () => {
       const res = await api.getDocentes();
@@ -136,7 +144,12 @@ const Panel = () => {
                           className="btn btn-primary mx-2"
                           title="Agregar docente"
                         >
-                          Agregar docente
+                          <Link
+                            to="/app/nuevoDocente"
+                            className="text-decoration-none text-white"
+                          >
+                            Agregar docente
+                          </Link>
                         </button>
                         <button
                           className="btn btn-danger mx-2"
@@ -172,4 +185,35 @@ const Panel = () => {
   );
 };
 
-export default Panel;
+const FormDocente = () => {
+  return (
+    <div className="container">
+      <Signin
+        handleSubmit={()=>console.log("")}
+        docente={true}
+      />
+    </div>
+  );
+};
+
+const PanelRoutes = () => {
+  const { user } = useContext(AuthContext);
+
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      nav("/app");
+    }
+  }, [user]);
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Panel />} />
+        <Route path="/nuevoDocente" element={<FormDocente />} />
+      </Routes>
+    </>
+  );
+};
+export default PanelRoutes;
